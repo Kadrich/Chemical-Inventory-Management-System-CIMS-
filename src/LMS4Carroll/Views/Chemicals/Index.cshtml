@@ -10,16 +10,16 @@
     <div class="panel-body table-responsive">
         <div class="btn-group">
             @if (User.IsInRole("Admin") || User.IsInRole("ChemUser") || User.IsInRole("BiologyUser"))
-        {
+            {
             <a id="createRoleModal" asp-action="Create" class="btn btn-primary">
                 <i class="glyphicon glyphicon-plus"></i>  Add Chemical
             </a>
-    }
+            }
         </div><br />
         <form asp-controller="Chemicals" asp-action="Index">
             <div class="form-actions no-color">
                 <p>
-                    <input type="text" name="ChemString" value="@ViewData["currentFilter"]" id="SearchString" />
+                    <input type="text" name="chemstring" value="@ViewData["CurrentFilter"]" id="SearchString" />
                     <input type="submit" value="Search" class="btn btn-default" />
                     <a asp-action="Index" class="btn btn-default">Back to Full List</a>
                 </p>
@@ -128,28 +128,28 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.ChemID)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.ChemID), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["ChemIDSort"] })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.CAS)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.CAS), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["CASSort"] })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Formula)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Formula), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["FormulaSort"] })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.FormulaName)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.FormulaName), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["FormulaNameSort"] })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.FormulaWeight)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.FormulaWeight), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["FormulaWeightSort"] })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Hazard)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Hazard), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["HazardSort"] })
                     </th>
                     @*<th>
                         @Html.DisplayNameFor(model => model.SDS)
                     </th>*@
                     <th>
-                        @Html.DisplayNameFor(model => model.State)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.State), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["StateSort"] })
                     </th>
                     @if (User.IsInRole("Admin") || User.IsInRole("ChemUser") || User.IsInRole("BiologyUser"))
                 {

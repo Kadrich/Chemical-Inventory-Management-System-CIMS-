@@ -13,7 +13,7 @@ namespace LMS4Carroll.Models
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "Chemical ID")]
-        public int? ChemID { get; set; }
+        public int ChemID { get; set; }
 
         [StringLength(50)]
         [Display(Name = "CAT Number")]

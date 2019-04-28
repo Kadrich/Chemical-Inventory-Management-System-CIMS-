@@ -26,46 +26,110 @@ namespace LMS4Carroll.Controllers
         }
 
         // GET: BioEquipments
-        public async Task<IActionResult> Index(string equipmentString)
+        public async Task<IActionResult> Index(string equipmentString, string sortOrder)
         {
-            ViewData["CurrentFilter"] = equipmentString;
+            ViewData["Search"] = equipmentString;
             sp_Logging("1-Info", "View", "Successfuly viewed Biology Equipment list", "Success");
-
+            var equipments = from m in _context.BioEquipments.Include(c => c.Location).Include(c => c.Order)
+                                 select m;
             //Search Feature
             if (!String.IsNullOrEmpty(equipmentString))
             {
-                var equipments = from m in _context.BioEquipments.Include(c => c.Location).Include(c => c.Order)
-                                 select m;
-
                 int forID;
                 if (Int32.TryParse(equipmentString, out forID))
                 {
                     equipments = equipments.Where(s => s.BioEquipmentID.Equals(forID)
                                             || s.LocationID.Equals(forID)
                                             || s.OrderID.Equals(forID));
-                    return View(await equipments.OrderByDescending(s => s.BioEquipmentID).ToListAsync());
                 }
                 else
                 {
                     equipments = equipments.Where(s => s.EquipmentName.Contains(equipmentString)
                                             || s.EquipmentModel.Contains(equipmentString)
                                             || s.SerialNumber.Contains(equipmentString)
-                                           // || s.Location.NormalizedStr.Contains(equipmentString)
                                             || s.LOT.Equals(equipmentString)
                                             || s.CAT.Equals(equipmentString)
                                             || s.Type.Contains(equipmentString)
                                             || s.Comments.Contains(equipmentString));
-                    return View(await equipments.OrderByDescending(s => s.BioEquipmentID).ToListAsync());
                 }
             }
 
-            else
-            {
-                var equipments = from m in _context.BioEquipments.Include(c => c.Location).Include(c => c.Order).Take(1000)
-                                 select m;
+            ViewData["BioIDSort"] = String.IsNullOrEmpty(sortOrder) ? "BioIDSort" : "";
+            ViewData["EquipNameSort"] = sortOrder == "EquipNameSort" ? "EquipNameSort_desc" : "EquipNameSort";
+            ViewData["EquipModelSort"] = sortOrder == "EquipModelSort" ? "EquipModelSort_desc" : "EquipModelSort";
+            ViewData["TypeSort"] = sortOrder == "TypeSort" ? "TypeSort_desc" : "TypeSort";
+            ViewData["SerialSort"] = sortOrder == "SerialSort" ? "SerialSort_desc" : "SerialSort";
+            ViewData["LocationSort"] = sortOrder == "LocationSort" ? "LocationSort_desc" : "LocationSort";
+            ViewData["InstallSort"] = sortOrder == "InstallSort" ? "InstallSort_desc" : "InstallSort";
+            ViewData["InspectionSort"] = sortOrder == "InspectionSort" ? "InspectionSort_desc" : "InspectionSort";
+            ViewData["OrderSort"] = sortOrder == "OrderSort" ? "OrderSort_desc" : "OrderSort";
 
-                return View(await equipments.OrderByDescending(s => s.BioEquipmentID).ToListAsync());
+
+            switch (sortOrder)
+            {
+                //Ascending
+                case "BioIDSort":
+                    equipments = equipments.OrderBy(x => x.BioEquipmentID);
+                    break;
+                case "EquipNameSort":
+                    equipments = equipments.OrderBy(x => x.EquipmentName);
+                    break;
+                case "EquipModelSort":
+                    equipments = equipments.OrderBy(x => x.EquipmentModel);
+                    break;
+                case "TypeSort":
+                    equipments = equipments.OrderBy(x => x.Type);
+                    break;
+                case "SerialSort":
+                    equipments = equipments.OrderBy(x => x.SerialNumber);
+                    break;
+                case "InstallSort":
+                    equipments = equipments.OrderBy(x => x.InstalledDate);
+                    break;
+                case "LocationSort":
+                    equipments = equipments.OrderBy(x => x.LocationID);
+                    break;
+                case "OrderSort":
+                    equipments = equipments.OrderBy(x => x.OrderID);
+                    break;
+                case "CommentSort":
+                    equipments = equipments.OrderBy(x => x.Comments);
+                    break;
+
+
+                //Descending
+                case "EquipNameSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.EquipmentName);
+                    break;
+                case "EquipModelSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.EquipmentModel);
+                    break;
+                case "TypeSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.Type);
+                    break;
+                case "SerialSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.SerialNumber);
+                    break;
+                case "InstallSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.InstalledDate);
+                    break;
+                case "LocationSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.LocationID);
+                    break;
+                case "OrderSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.OrderID);
+                    break;
+                case "CommentSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.Comments);
+                    break;
+
+                default:
+                    equipments = equipments.OrderByDescending(x => x.BioEquipmentID);
+                    break;
             }
+
+            return View(await equipments.ToListAsync());
+
         }
 
         // GET: BioEquipments/Details/5

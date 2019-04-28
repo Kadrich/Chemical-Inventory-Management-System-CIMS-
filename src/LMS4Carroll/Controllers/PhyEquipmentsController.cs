@@ -26,46 +26,117 @@ namespace LMS4Carroll.Controllers
         }
 
         // GET: PhyEquipments
-        public async Task<IActionResult> Index(string equipmentString)
+        public async Task<IActionResult> Index(string equipmentString, string sortOrder)
         {
-            ViewData["CurrentFilter"] = equipmentString;
+            ViewData["Search"] = equipmentString;
             sp_Logging("1-Info", "View", "Successfuly viewed Physics Equipment list", "Success");
-
+            var equipments = from m in _context.PhyEquipments.Include(c => c.Location).Include(c => c.Order)
+                                 select m;
             //Search Feature
             if (!String.IsNullOrEmpty(equipmentString))
             {
-                var equipments = from m in _context.PhyEquipments.Include(c => c.Location).Include(c => c.Order)
-                                 select m;
-
                 int forID;
                 if (Int32.TryParse(equipmentString, out forID))
                 {
                     equipments = equipments.Where(s => s.PhyEquipmentID.Equals(forID)
                                             || s.LocationID.Equals(forID)
                                             || s.OrderID.Equals(forID));
-                    return View(await equipments.OrderByDescending(s => s.PhyEquipmentID).ToListAsync());
                 }
                 else
                 {
                     equipments = equipments.Where(s => s.EquipmentName.Contains(equipmentString)
                                             || s.EquipmentModel.Contains(equipmentString)
                                             || s.SerialNumber.Contains(equipmentString)
-                                         // || s.Location.NormalizedStr.Contains(equipmentString)
                                             || s.LOT.Equals(equipmentString)
                                             || s.CAT.Equals(equipmentString)
                                             || s.Type.Contains(equipmentString)
                                             || s.Comments.Contains(equipmentString));
-                    return View(await equipments.OrderByDescending(s => s.PhyEquipmentID).ToListAsync());
                 }
             }
 
-            else
-            {
-                var equipments = from m in _context.PhyEquipments.Include(c => c.Location).Include(c => c.Order).Take(300)
-                                 select m;
+            //Sort Feature
+            ViewData["PhyIDSort"] = String.IsNullOrEmpty(sortOrder) ? "PhyIDSort" : "";
+            ViewData["EquipNameSort"] = sortOrder == "EquipNameSort" ? "EquipNameSort_desc" : "EquipNameSort";
+            ViewData["EquipModelSort"] = sortOrder == "EquipModelSort" ? "EquipModelSort_desc" : "EquipModelSort";
+            ViewData["TypeSort"] = sortOrder == "TypeSort" ? "TypeSort_desc" : "TypeSort";
+            ViewData["LocationSort"] = sortOrder == "LocationSort" ? "LocationSort_desc" : "LocationSort";
+            ViewData["InstallSort"] = sortOrder == "InstallSort" ? "InstallSort_desc" : "InstallSort";
+            ViewData["InspectSort"] = sortOrder == "InspectSort" ? "InspectSort_desc" : "InspectSort";
+            ViewData["OrderSort"] = sortOrder == "OrderSort" ? "OrderSort_desc" : "OrderSort";
+            ViewData["CATSort"] = sortOrder == "CATSort" ? "CATSort_desc" : "CATSort";
+            ViewData["LOTSort"] = sortOrder == "LOTSort" ? "LOTSort_desc" : "LOTSort";
 
-                return View(await equipments.OrderByDescending(s => s.PhyEquipmentID).ToListAsync());
+
+            switch (sortOrder)
+            {
+                //Ascending
+                case "PhyIDSort":
+                    equipments = equipments.OrderBy(x => x.PhyEquipmentID);
+                    break;
+                case "EquipNameSort":
+                    equipments = equipments.OrderBy(x => x.EquipmentName);
+                    break;
+                case "EquipModelSort":
+                    equipments = equipments.OrderBy(x => x.EquipmentModel);
+                    break;
+                case "TypeSort":
+                    equipments = equipments.OrderBy(x => x.Type);
+                    break;
+                case "LocationSort":
+                    equipments = equipments.OrderBy(x => x.LocationID);
+                    break;
+                case "InstallSort":
+                    equipments = equipments.OrderBy(x => x.InstalledDate);
+                    break;
+                case "InspectSort":
+                    equipments = equipments.OrderBy(x => x.InspectionDate);
+                    break;
+                case "OrderSort":
+                    equipments = equipments.OrderBy(x => x.OrderID);
+                    break;
+                case "CATSort":
+                    equipments = equipments.OrderBy(x => x.CAT);
+                    break;
+                case "LOTSort":
+                    equipments = equipments.OrderBy(x => x.LOT);
+                    break;
+
+
+                //Descending
+                case "EquipNameSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.EquipmentName);
+                    break;
+                case "EquipModelSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.EquipmentModel);
+                    break;
+                case "TypeSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.Type);
+                    break;
+                case "LocationSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.LocationID);
+                    break;
+                case "InstallSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.InstalledDate);
+                    break;
+                case "InspectSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.InspectionDate);
+                    break;
+                case "OrderSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.OrderID);
+                    break;
+                case "CATSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.CAT);
+                    break;
+                case "LOTSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.LOT);
+                    break;
+
+                default:
+                    equipments = equipments.OrderByDescending(x => x.PhyEquipmentID);
+                    break;
             }
+
+            return View(await equipments.ToListAsync());
         }
 
         [Authorize(Roles = "Admin,PhysicsUser")]

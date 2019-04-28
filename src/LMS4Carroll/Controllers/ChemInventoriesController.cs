@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using ZXing;
+using LMS4Carroll.Services;
 
 namespace LMS4Carroll.Controllers
 {
@@ -27,52 +28,166 @@ namespace LMS4Carroll.Controllers
         }
 
         // GET: ChemInventories
-        public async Task<IActionResult> Index(string cheminventoryString)
+        public async Task<IActionResult> Index(string cheminventoryString, string sortOrder, bool barcodeFlag)
         {
             //var applicationDbContext = _context.ChemInventory.Include(c => c.Chemical).Include(c => c.Location).Include(c => c.Order);
-            ViewData["CurrentFilter"] = cheminventoryString;
-            sp_Logging("1-Info", "View", "Successfuly viewed Chemical Inventory list", "Success");
+            ViewData["Search"] = cheminventoryString;
+            Sp_Logging("1-Info", "View", "Successfuly viewed Chemical Inventory list", "Success");
             var inventory = from m in _context.ChemInventory.Include(c => c.Chemical).Include(c => c.Location).Include(c => c.Order)
                             select m;
-            
 
+            // display new barcode when new inventory is entered
+            if (barcodeFlag)
+            {
+                ViewData["NewBarcode"] = inventory.Max(s => s.ChemInventoryId);
+            }
+            
             //Search Feature
             if (!String.IsNullOrEmpty(cheminventoryString))
             {
-                int forID;
-                if (Int32.TryParse(cheminventoryString, out forID))
+                
+                int outID;
+                if (Int32.TryParse(cheminventoryString, out outID))
                 {
-                    inventory = inventory.Where(s => s.ChemInventoryId.Equals(forID)
-                                          || s.LocationID.Equals(forID)
-                                          || s.OrderID.Equals(forID)
-                                          || s.Chemical.ChemID.Equals(forID));
-                    return View(await inventory.OrderByDescending(s => s.ChemInventoryId).ToListAsync());
+                    inventory = inventory.Where(s => s.ChemInventoryId.Equals(outID)
+                                            || s.Chemical.ChemID.Equals(outID)
+                                            || s.LocationID.Equals(outID));
                 }
                 else
                 {
                     inventory = inventory.Where(s => s.Chemical.FormulaName.Contains(cheminventoryString));
 
                     inventory = inventory.Where(s => s.Department.Contains(cheminventoryString)
-                                          || s.CAT.Equals(cheminventoryString)
-                                          || s.LOT.Equals(cheminventoryString)
-                                          || s.Units.Contains(cheminventoryString)
-                                          || s.Chemical.FormulaName.Contains(cheminventoryString));
-                    return View(await inventory.OrderByDescending(s => s.ChemInventoryId).ToListAsync());
+                                        || s.CAT.Contains(cheminventoryString)  
+                                        || s.LOT.Contains(cheminventoryString)    
+                                        || s.Units.Contains(cheminventoryString)
+                                        || s.Chemical.FormulaName.Contains(cheminventoryString)
+                                        || s.Chemical.CAS.Contains(cheminventoryString));
                 }
+                
+                
+            }
+            
+            //Sort feature
+            ViewData["BarcodeSort"] = String.IsNullOrEmpty(sortOrder) ? "BarcodeSort_desc" : "";
+            ViewData["POSort"] = sortOrder == "POSort" ? "POSort_desc" : "POSort";
+            ViewData["CASSort"] = sortOrder == "CASSort" ? "CASSort_desc" : "CASSort";
+            ViewData["ChemSort"] = sortOrder == "ChemSort" ? "ChemSort_desc" : "ChemSort";
+            ViewData["OrderSort"] = sortOrder == "OrderSort" ? "OrderSort_desc" : "OrderSort";
+            ViewData["LocationSort"] = sortOrder == "LocationSort" ? "LocationSort_desc" : "LocationSort";
+            ViewData["DateSort"] = sortOrder == "DateSort" ? "DateSort_desc" : "DateSort";
+            ViewData["QtySort"] = sortOrder == "QtySort" ? "QtySort_desc" : "QtySort";
+            ViewData["UnitSort"] = sortOrder == "UnitSort" ? "UnitSort_desc" : "UnitSort";
+            ViewData["DeptSort"] = sortOrder == "DeptSort" ? "DeptSort_desc" : "DeptSort";
+
+            
+            switch (sortOrder)
+            {
+                //Ascending
+                case "POSort":
+                    inventory = inventory.OrderBy(x => x.Order.PO);
+                    break;
+                case "CASSort":
+                    inventory = inventory.OrderBy(x => x.Chemical.CAS);
+                    break;
+                case "ChemSort":
+                    inventory = inventory.OrderBy(x => x.Chemical.FormulaName);
+                    break;
+                case "OrderSort":
+                    inventory = inventory.OrderBy(x => x.OrderID);
+                    break;
+                case "LocationSort":
+                    inventory = inventory.OrderBy(x => x.Location.StorageCode);
+                    break;
+                case "DateSort":
+                    inventory = inventory.OrderBy(x => x.ExpiryDate);
+                    break;
+                case "QtySort":
+                    inventory = inventory.OrderBy(x => x.QtyLeft);
+                    break;
+                case "UnitSort":
+                    inventory = inventory.OrderBy(x => x.Units);
+                    break;
+                case "DeptSort":
+                    inventory = inventory.OrderBy(x => x.Department);
+                    break;
+
+                //Descending
+                case "BarcodeSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.ChemInventoryId);
+                    break;
+                case "POSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.Order.PO);
+                    break;
+                case "CASSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.Chemical.CAS);
+                    break;
+                case "ChemSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.Chemical.FormulaName);
+                    break;
+                case "OrderSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.OrderID);
+                    break;
+                case "LocationSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.Location.StorageCode);
+                    break;
+                case "DateSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.ExpiryDate);
+                    break;
+                case "QtySort_desc":
+                    inventory = inventory.OrderByDescending(x => x.QtyLeft);
+                    break;
+                case "UnitSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.Units);
+                    break;
+                case "DeptSort_desc":
+                    inventory = inventory.OrderByDescending(x => x.Department);
+                    break;
+
+                default:
+                    inventory = inventory.OrderBy(x => x.ChemInventoryId);
+                    break;
             }
 
-            return View(await inventory.OrderBy(s => s.Chemical.FormulaName).ToListAsync());
+            return View(await inventory.ToListAsync());
         }
 
-        // print out the chemInventory as a pdf...
-        public void generateReport()
+        // print out the chemInventory as a pdf
+        public FileContentResult ExportCSV()
         {
-            //todo
+            var dataTable = from m in _context.ChemInventory.Include(c => c.Chemical).Include(c => c.Location).Include(c => c.Order)
+                            select m;
 
+            var export = new CsvExport();
+            export.AddRow();
+            export["Barcode"] = "Barcode";
+            export["CAS"] = "CAS Number";
+            export["CAT"] = "CAT Number";
+            export["LOT"] = "LOT Number";
+            export["Chem"] = "Chemical Name";
+            export["Qty"] = "Quantity Left";
+            export["Units"] = "Units";
+            export["Department"] = "Department";
+            export["Location"] = "Location";
+            foreach (var item in dataTable)
+            {
+                export.AddRow();
+                export["Barcode"] = item.ChemInventoryId;
+                export["CAS"] = item.Chemical.CAS;
+                export["CAT"] = item.CAT;
+                export["LOT"] = item.LOT;
+                export["Chem"] = item.Chemical.FormulaName;
+                export["Qty"] = item.QtyLeft;
+                export["Units"] = item.Units;
+                export["Department"] = item.Department;
+                export["Location"] = item.NormalizedLocation;
+            }
+
+            return File(export.ExportToBytes(), "text/csv", "Chemical Inventory.csv");
         }
 
         // GET: ChemInventories/Details/5
-        [Authorize(Roles = "Admin,ChemUser,BiologyUser")]
+        [Authorize(Roles = "Admin,ChemUser,BiologyUser,Student")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -93,7 +208,7 @@ namespace LMS4Carroll.Controllers
         [Authorize(Roles = "Admin,ChemUser,BiologyUser")]
         public IActionResult Create()
         {
-            ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName");
+            ViewData["ChemID"] = new SelectList(_context.Chemical.OrderBy(x => x.FormulaName), "ChemID", "FormulaName");
             ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode");
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID");
             return View();
@@ -116,7 +231,7 @@ namespace LMS4Carroll.Controllers
             ViewData["Department"] = deptstring;
             ViewData["CAT"] = cat;
             ViewData["LOT"] = lot;
-
+            
             ChemInventory chemInventory = null;
 
             if (ModelState.IsValid)
@@ -139,8 +254,8 @@ namespace LMS4Carroll.Controllers
                 
                 _context.Add(chemInventory);
                 await _context.SaveChangesAsync();
-                sp_Logging("2-Change", "Create", "User created a chemical inventory item where ChemID=" + formulainput + ", OrderID=" + formulainput, "Success");
-                return RedirectToAction("Index");
+                Sp_Logging("2-Change", "Create", "User created a chemical inventory item where ChemID=" + formulainput + ", OrderID=" + formulainput, "Success");
+                return RedirectToAction("Index", new { barcodeFlag = true});
             }
             ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName", chemInventory.ChemID);
             ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventory.LocationID);
@@ -182,7 +297,7 @@ namespace LMS4Carroll.Controllers
             {
                 return NotFound();
             }
-
+            
             if (ModelState.IsValid)
             {
                 try
@@ -200,7 +315,7 @@ namespace LMS4Carroll.Controllers
                     chemInventory.NormalizedLocation = temp.StorageCode;
                     _context.Update(chemInventory);
                     await _context.SaveChangesAsync();
-                    sp_Logging("2-Change", "Edit", "User edited a Chemical inventory item where ID= " + id.ToString(), "Success");
+                    Sp_Logging("2-Change", "Edit", "User edited a Chemical inventory item where ID= " + id.ToString(), "Success");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -248,7 +363,7 @@ namespace LMS4Carroll.Controllers
             var chemInventory = await _context.ChemInventory.SingleOrDefaultAsync(m => m.ChemInventoryId == id);
             _context.ChemInventory.Remove(chemInventory);
             await _context.SaveChangesAsync();
-            sp_Logging("3-Remove", "Delete", "User deleted a Chemical inventory item where ID=" + id.ToString(), "Success");
+            Sp_Logging("3-Remove", "Delete", "User deleted a Chemical inventory item where ID=" + id.ToString(), "Success");
             return RedirectToAction("Index");
         }
 
@@ -258,7 +373,7 @@ namespace LMS4Carroll.Controllers
         }
 
         //Custom Loggin Solution
-        private void sp_Logging(string level, string logger, string message, string exception)
+        private void Sp_Logging(string level, string logger, string message, string exception)
         {
             //Connection string from AppSettings.JSON
             string CS = configuration.GetConnectionString("DefaultConnection");

@@ -1,0 +1,49 @@
+﻿@model LMS4Carroll.Models.Formula
+
+@{
+    ViewData["Title"] = "Edit | Formula";
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Edit Formula</div>
+    <div class="panel-body">
+        <br />
+        <form asp-action="Edit">
+            <div class="form-horizontal">
+                <h4>Formula</h4>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="FormulaID" />
+                <div class="form-group">
+                    <label asp-for="FormulaName" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="FormulaName" class="form-control" />
+                        <span asp-validation-for="FormulaName" class="text-danger" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger" />
+                    </div>
+                </div>
+                <div id="editbtn" class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                    <div class="col-md-offset-2 col-md-10">
+                        <a asp-action="Index" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

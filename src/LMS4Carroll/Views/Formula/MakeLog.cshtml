@@ -1,0 +1,72 @@
+﻿@model LMS4Carroll.Models.FormulaLog
+
+@{
+    ViewData["Title"] = "Make | Formula Log";
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Create Log</div>
+    <div class="panel-body">
+        <br />
+        <form asp-action="MakeLog">
+            <div class="form-horizontal">
+                <h4>Formula Log</h4>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        Formula Name
+                    </dt>
+                    <dd>
+                        @ViewData["FormulaName"]
+                    </dd>
+                    <dt>
+                        Formula Description
+                    </dt>
+                    <dd>
+                        @ViewData["FormulaDescription"]
+                    </dd>
+                </dl>
+            
+                <input type="hidden" asp-for="FormulaID" value="@ViewData["FormulaID"]" />
+                <div class="form-group">
+                    <label asp-for="Name" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Date" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Date" class="form-control" value="@ViewData["Date"]" />
+                        <span asp-validation-for="Date" class="text-danger" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ChemicalList" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="ChemicalList" class="form-control" />
+                        <span asp-validation-for="ChemicalList" class="text-danger" />
+                        <span class="text-danger">@Html.ValidationMessageFor(m => m.ChemicalList)</span>
+                    </div>
+                </div>
+                <div id="editbtn" class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create Log" class="btn btn-primary" />
+                    </div>
+                    <div class="col-md-offset-2 col-md-10">
+                        <a asp-action="Index" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

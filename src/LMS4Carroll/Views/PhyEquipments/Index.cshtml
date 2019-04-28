@@ -19,7 +19,7 @@
         <form asp-controller="PhyEquipments" asp-action="Index" method="get">
             <div class="form-actions no-color">
                 <p>
-                    <input type="text" name="EquipmentString" value="@ViewData["currentFilter"]" id="SearchString" />
+                    <input type="text" name="EquipmentString" value="@ViewData["Search"]" id="SearchString" />
                     <input type="submit" value="Search" class="btn btn-default" />
                     <a asp-action="Index" class="btn btn-default">Back to Full List</a>
                 </p>
@@ -128,41 +128,44 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.PhyEquipmentID)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.PhyEquipmentID), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["PhyIDSort"] })
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.EquipmentName)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.EquipmentName), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["EquipNameSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.EquipmentModel)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.EquipmentModel), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["EquipModelSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Type)
-                    </th>
-                    @*<th>
-                        @Html.DisplayNameFor(model => model.SerialNumber)
-                    </th>*@
-                    <th>
-                        @Html.DisplayNameFor(model => model.Location.NormalizedStr)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Type), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["TypeSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.InstalledDate)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Location.NormalizedStr), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["LocationSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.InspectionDate)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.InstalledDate), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["InstallSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.OrderID)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.InspectionDate), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["InspectSort"] })
+
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
+
                     </th>
                     <td>
-                        @Html.DisplayNameFor(model => model.CAT)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.CAT), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["CATSort"] })
+
                     </td>
                     <td>
-                        @Html.DisplayNameFor(model => model.LOT)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.LOT), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["LOTSort"] })
+
                     </td>
-                    @*<th>
-                        @Html.DisplayNameFor(model => model.Comments)
-                    </th>*@
                     @if (User.IsInRole("Admin") || User.IsInRole("PhysicsUser"))
                 {
                     <th>
@@ -187,9 +190,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Type)
                     </td>
-                    @*<td>
-                        @Html.DisplayFor(modelItem => item.SerialNumber)
-                    </td>*@
                     <td>
                         @if (User.IsInRole("Admin"))
                     {
@@ -220,15 +220,7 @@
                     @Html.DisplayFor(modelItem => item.OrderID)
             }
                     </td>
-                    @*<td>
-                        @Html.DisplayFor(modelItem => item.CAT)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LOT)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Comments)
-                    </td>*@
+
                     @if (User.IsInRole("Admin") || User.IsInRole("PhysicsUser"))
                 {
                     <td>

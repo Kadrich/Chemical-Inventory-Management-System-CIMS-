@@ -26,7 +26,7 @@ namespace LMS4Carroll.Controllers
         }
 
         // GET: Chemicals
-        public async Task<IActionResult> Index(string chemstring)
+        public async Task<IActionResult> Index(string chemstring, string sortOrder)
         {
             ViewData["CurrentFilter"] = chemstring;
             sp_Logging("1-Info", "View", "Successfuly viewed Chemicals list", "Success");
@@ -36,14 +36,15 @@ namespace LMS4Carroll.Controllers
             //Search Feature
             if (!String.IsNullOrEmpty(chemstring))
             {
+                
                 int forID;
                 if (Int32.TryParse(chemstring, out forID))
                 {
                     chemicals = chemicals.Where(s => s.ChemID.Equals(forID));
-                    return View(await chemicals.OrderBy(s => s.FormulaName).ToListAsync());
                 }
                 else
                 {
+                
                     chemicals = chemicals.Where(s => s.CAS.Contains(chemstring)
                                        || s.Formula.ToLower().Contains(chemstring)
                                        || s.FormulaName.ToLower().Contains(chemstring)
@@ -52,12 +53,69 @@ namespace LMS4Carroll.Controllers
                                        || s.CAS.ToLower().Contains(chemstring)
                                        || s.Hazard.ToLower().Contains(chemstring)
                                        || s.State.ToLower().Contains(chemstring));
-                    return View(await chemicals.OrderBy(s => s.FormulaName).ToListAsync());
                 }
             }
 
-            return View(await chemicals.OrderBy(s => s.FormulaName).ToListAsync());
-            //return View(await _context.Chemical.ToListAsync());
+            //Sort feature
+            ViewData["FormulaNameSort"] = String.IsNullOrEmpty(sortOrder) ? "FormulaNameSort_desc" : "";
+            ViewData["ChemIDSort"] = sortOrder == "ChemIDSort" ? "ChemIDSort_desc" : "ChemIDSort";
+            ViewData["CASSort"] = sortOrder == "CASSort" ? "CASSort_desc" : "CASSort";
+            ViewData["FormulaSort"] = sortOrder == "FormulaSort" ? "FormulaSort_desc" : "FormulaSort";
+            ViewData["FormulaWeightSort"] = sortOrder == "FormulaWeightSort" ? "FormulaWeightSort_desc" : "FormulaWeightSort";
+            ViewData["HazardSort"] = sortOrder == "HazardSort" ? "HazardSort_desc" : "HazardSort";
+            ViewData["StateSort"] = sortOrder == "StateSort" ? "StateSort_desc" : "StateSort";
+
+            switch (sortOrder)
+            {
+                //Ascending
+                case "ChemIDSort":
+                    chemicals = chemicals.OrderBy(x => x.ChemID);
+                    break;
+                case "CASSort":
+                    chemicals = chemicals.OrderBy(x => x.CAS);
+                    break;
+                case "FormulaSort":
+                    chemicals = chemicals.OrderBy(x => x.Formula);
+                    break;
+                case "FormulaWeightSort":
+                    chemicals = chemicals.OrderBy(x => x.FormulaWeight);
+                    break;
+                case "HazardSort":
+                    chemicals = chemicals.OrderBy(x => x.Hazard);
+                    break;
+                case "StateSort":
+                    chemicals = chemicals.OrderBy(x => x.State);
+                    break;
+
+                //Descending
+                case "FormulaNameSort_desc":
+                    chemicals = chemicals.OrderByDescending(x => x.FormulaName);
+                    break;
+                case "ChemIDSort_desc":
+                    chemicals = chemicals.OrderByDescending(x => x.ChemID);
+                    break;
+                case "CASSort_desc":
+                    chemicals = chemicals.OrderByDescending(x => x.CAS);
+                    break;
+                case "FormulaSort_desc":
+                    chemicals = chemicals.OrderByDescending(x => x.Formula);
+                    break;
+                case "FormulaWeightSort_desc":
+                    chemicals = chemicals.OrderByDescending(x => x.FormulaWeight);
+                    break;
+                case "HazardSort_desc":
+                    chemicals = chemicals.OrderByDescending(x => x.Hazard);
+                    break;
+                case "StateSort_desc":
+                    chemicals = chemicals.OrderByDescending(x => x.State);
+                    break;
+
+                default:
+                    chemicals = chemicals.OrderBy(x => x.FormulaName);
+                    break;
+            }
+
+            return View(await chemicals.ToListAsync());
         }
 
         // GET: Chemicals/Details/5

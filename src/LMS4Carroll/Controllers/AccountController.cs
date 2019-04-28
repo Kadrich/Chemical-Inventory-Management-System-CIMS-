@@ -11,8 +11,6 @@ using Microsoft.Extensions.Logging;
 using LMS4Carroll.Models;
 using LMS4Carroll.Models.AccountViewModels;
 using LMS4Carroll.Services;
-using NLog;
-using NLog.Fluent;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 

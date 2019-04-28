@@ -19,7 +19,7 @@
         <form asp-controller="BioArchives" asp-action="Index" method="get">
             <div class="form-actions no-color">
                 <p>
-                    <input type="text" name="EquipmentString" value="@ViewData["currentFilter"]" id="SearchString"/>
+                    <input type="text" name="EquipmentString" value="@ViewData["Search"]" id="SearchString"/>
                     <input type="submit" value="Search" class="btn btn-default" />
                     <a asp-action="Index" class="btn btn-default">Back to Full List</a>
                 </p>
@@ -128,31 +128,39 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.BioArchiveID)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.BioArchiveID), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["BioIDSort"] } )
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.EquipmentName)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.EquipmentName), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["EquipNameSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.EquipmentModel)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.EquipmentModel), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["EquipModelSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Type)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Type), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["TypeSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.SerialNumber)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.SerialNumber), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["SerialSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.InstalledDate)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.InstalledDate), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["InstallSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.ArchiveDate)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.ArchiveDate), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["ArchiveSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.OrderID)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
+
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Comments)
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Comments), "Index", new { equipmentString = ViewData["Search"], sortOrder = ViewData["CommentSort"] })
+
                     </th>
                     @if (User.IsInRole("Admin") || User.IsInRole("BiologyUser"))
                     {

@@ -26,23 +26,21 @@ namespace LMS4Carroll.Controllers
         }
 
         // GET: BioArchive
-        public async Task<IActionResult> Index(string equipmentString)
+        public async Task<IActionResult> Index(string equipmentString, string sortOrder)
         {
-            ViewData["CurrentFilter"] = equipmentString;
+            ViewData["Search"] = equipmentString;
             sp_Logging("1-Info", "View", "Successfuly viewed Biology Archive list", "Success");
-
+            var equipments = from m in _context.BioArchives.Include(c => c.Order)
+                             select m;
             //Search Feature
             if (!String.IsNullOrEmpty(equipmentString))
             {
-                var equipments = from m in _context.BioArchives.Include(c => c.Order)
-                                 select m;
 
                 int forID;
                 if (Int32.TryParse(equipmentString, out forID))
                 {
                     equipments = equipments.Where(s => s.BioArchiveID.Equals(forID)
                                             || s.OrderID.Equals(forID));
-                    return View(await equipments.OrderByDescending(s => s.BioArchiveID).ToListAsync());
                 }
                 else
                 {
@@ -51,17 +49,84 @@ namespace LMS4Carroll.Controllers
                                             || s.SerialNumber.Equals(equipmentString)
                                             || s.Type.Contains(equipmentString)
                                             || s.Comments.Contains(equipmentString));
-                    return View(await equipments.OrderByDescending(s => s.BioArchiveID).ToListAsync());
                 }
             }
 
-            else
-            {
-                var equipments = from m in _context.BioArchives.Include(c => c.Order).Take(300)
-                                 select m;
+            //Sort Feature
+            ViewData["BioIDSort"] = String.IsNullOrEmpty(sortOrder) ? "BioIDSort" : "";
+            ViewData["EquipNameSort"] = sortOrder == "EquipNameSort" ? "EquipNameSort_desc" : "EquipNameSort";
+            ViewData["EquipModelSort"] = sortOrder == "EquipModelSort" ? "EquipModelSort_desc" : "EquipModelSort";
+            ViewData["TypeSort"] = sortOrder == "TypeSort" ? "TypeSort_desc" : "TypeSort";
+            ViewData["SerialSort"] = sortOrder == "SerialSort" ? "SerialSort_desc" : "SerialSort";
+            ViewData["InstallSort"] = sortOrder == "InstallSort" ? "InstallSort_desc" : "InstallSort";
+            ViewData["ArchiveSort"] = sortOrder == "ArchiveSort" ? "ArchiveSort_desc" : "ArchiveSort";
+            ViewData["OrderSort"] = sortOrder == "OrderSort" ? "OrderSort_desc" : "OrderSort";
+            ViewData["CommentSort"] = sortOrder == "CommentSort" ? "CommentSort_desc" : "CommentSort";
 
-                return View(await equipments.OrderByDescending(s => s.BioArchiveID).ToListAsync());
+            switch (sortOrder)
+            {
+                //Ascending
+                case "BioIDSort":
+                    equipments = equipments.OrderBy(x => x.BioArchiveID);
+                    break;
+                case "EquipNameSort":
+                    equipments = equipments.OrderBy(x => x.EquipmentName);
+                    break;
+                case "EquipModelSort":
+                    equipments = equipments.OrderBy(x => x.EquipmentModel);
+                    break;
+                case "TypeSort":
+                    equipments = equipments.OrderBy(x => x.Type);
+                    break;
+                case "SerialSort":
+                    equipments = equipments.OrderBy(x => x.SerialNumber);
+                    break;
+                case "InstallSort":
+                    equipments = equipments.OrderBy(x => x.InstalledDate);
+                    break;
+                case "ArchiveSort":
+                    equipments = equipments.OrderBy(x => x.ArchiveDate);
+                    break;
+                case "OrderSort":
+                    equipments = equipments.OrderBy(x => x.OrderID);
+                    break;
+                case "CommentSort":
+                    equipments = equipments.OrderBy(x => x.Comments);
+                    break;
+
+
+                //Descending
+                case "EquipNameSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.EquipmentName);
+                    break;
+                case "EquipModelSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.EquipmentModel);
+                    break;
+                case "TypeSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.Type);
+                    break;
+                case "SerialSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.SerialNumber);
+                    break;
+                case "InstallSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.InstalledDate);
+                    break;
+                case "ArchiveSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.ArchiveDate);
+                    break;
+                case "OrderSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.OrderID);
+                    break;
+                case "CommentSort_desc":
+                    equipments = equipments.OrderByDescending(x => x.Comments);
+                    break;
+
+                default:
+                    equipments = equipments.OrderByDescending(x => x.BioArchiveID);
+                    break;
             }
+            return View(await equipments.ToListAsync());
+
         }
 
         // GET: BioArchives/Details/5

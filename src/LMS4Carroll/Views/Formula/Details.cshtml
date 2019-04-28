@@ -1,0 +1,39 @@
+﻿@model LMS4Carroll.Models.Formula
+
+@{
+    ViewData["Title"] = "Details | Formula";
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Formula Details</div>
+    <div class="panel-body">
+        <br />
+        <div>
+            <h4>Formula</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FormulaName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FormulaName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+            </dl>
+        </div>
+        <div id="deletebtn">
+            <div class="form-actions no-color">
+                <a asp-action="Index" class="btn btn-default">
+                    <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+                </a>
+                <a asp-action="Edit" class="btn btn-info" asp-route-id="@Model.FormulaID">Edit</a><br />
+            </div>
+        </div>
+    </div>
+</div>

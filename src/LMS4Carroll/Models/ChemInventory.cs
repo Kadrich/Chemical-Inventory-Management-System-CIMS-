@@ -54,6 +54,7 @@ namespace LMS4Carroll.Models
         public string Units { get; set; }
 
         [Required]
+        [Range(0,999999, ErrorMessage ="Quantity must between 0 and 9999")]
         [Display(Name = "Qty Left")]
         public float QtyLeft { get; set; }
 

@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using LMS4Carroll.Data;
 using LMS4Carroll.Models;
 using Microsoft.AspNetCore.Authorization;
-using NLog;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;

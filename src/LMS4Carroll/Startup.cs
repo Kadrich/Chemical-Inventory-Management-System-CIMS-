@@ -9,10 +9,6 @@ using LMS4Carroll.Models;
 using LMS4Carroll.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Http;
-using NLog.Web;
-using NLog.Extensions.Logging;
-using NLog;
-using NLog.Config;
 
 namespace LMS4Carroll
 {
@@ -145,10 +141,6 @@ namespace LMS4Carroll
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
             //DbInitializer.Initialize(context);
-        }
-        private void updateConfig(object sender, LoggingConfigurationReloadedEventArgs e)
-        {
-            LogManager.Configuration.Variables["connectionString"] = Configuration.GetConnectionString("NLogDb");
         }
     }
 }
