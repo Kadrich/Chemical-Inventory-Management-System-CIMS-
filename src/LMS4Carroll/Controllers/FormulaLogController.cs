@@ -169,19 +169,18 @@ namespace LMS4Carroll.Controllers
 
             var formulalog = await _context.FormulaLog.SingleOrDefaultAsync(x => x.LogID == id);
             var formula = await _context.Formula.SingleOrDefaultAsync(f => f.FormulaID == formulalog.FormulaID);
-            if (formula == null || formula == null)
-            {
-                return NotFound();
-            }
-            ViewData["FormulaName"] = formula.FormulaName;
-            ViewData["FormulaDescription"] = formula.Description;
-            ViewData["FormulaID"] = formula.FormulaID;
-            ViewData["Date"] = formulalog.Date;
-            ViewData["LogID"] = formulalog.LogID;
             if (formulalog == null)
             {
                 return NotFound();
             }
+            if (formula != null)
+            {
+                ViewData["FormulaName"] = formula.FormulaName;
+                ViewData["FormulaDescription"] = formula.Description;
+                ViewData["FormulaID"] = formula.FormulaID;
+            }
+            ViewData["Date"] = formulalog.Date;
+            ViewData["LogID"] = formulalog.LogID;
             return View(formulalog);
         }
 
