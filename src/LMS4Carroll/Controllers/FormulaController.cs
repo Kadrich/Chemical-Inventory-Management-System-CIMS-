@@ -89,7 +89,7 @@ namespace LMS4Carroll.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ChemUser,BiologyUser")]
-        public async Task<ActionResult> Create([Bind("FormulaID,Name,Description")]Formula formula)
+        public async Task<ActionResult> Create([Bind("FormulaID,FormulaName,Description")]Formula formula)
         {
             if (ModelState.IsValid)
             {
@@ -121,7 +121,7 @@ namespace LMS4Carroll.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ChemUser,BiologyUser")]
-        public async Task<ActionResult> Edit(int id, [Bind("FormulaID,Name,Description")]Formula formula)
+        public async Task<ActionResult> Edit(int id, [Bind("FormulaID,FormulaName,Description")]Formula formula)
         {
             if (id != formula.FormulaID)
             {
