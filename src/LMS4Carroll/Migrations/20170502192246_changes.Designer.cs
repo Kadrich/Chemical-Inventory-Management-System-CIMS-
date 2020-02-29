@@ -647,6 +647,22 @@ namespace LMS4Carroll.Migrations
                         .HasForeignKey("OrderID");
                 });
 
+                // has something to do with Chemicals Archive. Double Check the arguments
+            modelBuilder.Entity("LMS4Carroll.Models.ChemInventoryArc", b =>
+                {
+                    b.HasOne("LMS4Carroll.Models.Chemical", "Chemical")
+                        .WithMany("ChemInventoriesArc")
+                        .HasForeignKey("ChemID");
+
+                    b.HasOne("LMS4Carroll.Models.Location", "Location")
+                        .WithMany("ChemInventoriesArc")
+                        .HasForeignKey("LocationID");
+
+                    b.HasOne("LMS4Carroll.Models.Order", "Order")
+                        .WithMany("ChemInventorysArc")
+                        .HasForeignKey("OrderID");
+                });
+
             modelBuilder.Entity("LMS4Carroll.Models.ChemLog", b =>
                 {
                     b.HasOne("LMS4Carroll.Models.ChemInventory", "ChemInventory")

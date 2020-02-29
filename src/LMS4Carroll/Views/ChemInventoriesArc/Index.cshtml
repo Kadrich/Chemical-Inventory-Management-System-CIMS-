@@ -1,0 +1,161 @@
+﻿@model IEnumerable<LMS4Carroll.Models.ChemInventoryArc>
+
+@{ 
+    ViewData["Title"] = "List | Chemicals Archive";
+}
+@section scripts {
+
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Chemicals Archive</div>
+    <div class="panel-body table-responsive">
+ @*   this is the 'Add Inventory' button. This links to the Create.cshtml page under the ChemInventoriesArc View.
+        I don't think this is needed for the archives page, but I'm leaving it here just in case*@
+        <div class="btn-group">
+            @if (User.IsInRole("Admin") || User.IsInRole("ChemUser") || User.IsInRole("BiologyUser"))
+            {
+                <a id="createRoleModel" asp-action="Create" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-plus"></i> Add Inventory
+                </a>
+            }
+        </div><br />
+        @* "ChemInvectories" -> what is it's purpose? 
+            switched to "ChemArchives" because I made a virtual method in Chemical.cs, Location.cs *@
+        <form asp-controller="ChemArchives" asp-action="Index" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    @* "cheminventoryString" -> what is it's purpose? 
+                        switched to "cheminventoryarcString" as I made that variable in ChemicalsArchiveController.cs *@
+                    <input type="text" placeholder="Chem Name" name="cheminventoryarcString" value="@ViewData["Search"]" id="SearchString" />
+                    <input type="submit" value="Search" class="btn btn-default" />
+                    <a class="btn btn-default" asp-action="Index">Back to Full List</a>
+ @*                   <a class="btn btn-default" asp-action="ExportCSV">Export Table</a>
+ I believe this has something to do with the print function    *@
+                </p>
+            </div>
+        </form>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>
+                        @* "cheminventoryString" -> is in all of these too 
+                                All switched to "cheminventoryarcString" *@
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.ChemInventoryIdArc), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["BarcodeSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Order.PO), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["POSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.CAS), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["CASSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.FormulaName), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["ChemSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Location.StorageCode), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["LocationSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.ExpiryDate), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["DateSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.QtyLeft), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["QtySort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Units), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["UnitSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Department), "Index", new { cheminventoryarcString = ViewData["Search"], sortOrder = ViewData["DeptSort"] })
+                    </th>
+                    <th width="200">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ChemInventoryIdArc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Order.PO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Chemical.CAS)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Chemical.FormulaName)
+                    </td>
+                    <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-area="" asp-controller="Locations" asp-action="Details" asp-route-id="@item.LocationID">
+                                @Html.DisplayFor(modelItem => item.Location.NormalizedStr)
+                            </a>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Location.NormalizedStr)
+                        }
+                    </td>
+                    <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-area="" asp-controller="Orders" asp-action="Details" asp-route-id="@item.OrderID">
+                                @Html.DisplayFor(modelItem => item.OrderID)
+                            </a>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.OrderID)
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExpiryDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QtyLeft)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Units)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department)
+                    </td>
+                    <td>
+                        @if (User.IsInRole("ChemUser") || User.IsInRole("BioUser") || User.IsInRole("Admin"))
+                        {
+                            <a id="editbtn" asp-action="Edit" asp-route-id="@item.ChemInventoryIdArc" class="btn btn-info">
+                                <i class="glyphicon glyphicon-pencil"></i> Edit
+                            </a>
+                        }
+
+                        <a id="detailsbtn" asp-action="Details" asp-route-id="@item.ChemInventoryIdArc" class="btn btn-info">
+                            <i class="glyphicon glyphicon-search"></i> Details
+                        </a>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a id="deletebtn" asp-action="Delete" asp-route-id="@item.ChemInventoryIdArc" class="btn btn-danger loc3">
+                                <i class="glyphicon glyphicon-trash"></i> Delete
+                            </a>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {@* when hyperlink has function, change btn-default -> btn-success and remove the whole style portion   *@
+                            <a id="restorebtn" asp-action="probablycreate" asp-route-id="@item.ChemInventoryIdArc" class="btn btn-default loc3" style="color:gray">
+                                <i class="glyphicon glyphicon-arrow-left"></i> Restore
+                            </a>
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

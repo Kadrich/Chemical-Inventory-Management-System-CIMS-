@@ -53,5 +53,6 @@ namespace LMS4Carroll.Models
         public string SDS { get; set; }
 
         public virtual ICollection<ChemInventory> ChemInventories { get; set; }
+        public virtual ICollection<ChemInventoryArc> ChemArchives { get; set; }
     }
 }

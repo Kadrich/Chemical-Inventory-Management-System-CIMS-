@@ -300,6 +300,16 @@ namespace LMS4Carroll.Controllers
             
             if (ModelState.IsValid)
             {
+                if (qtyinput == 0)
+                {
+                    ChemInventoryArc chemInventoryArc = await _context.ChemInventoryArc.SingleOrDefaultAsync(p => p.ChemInventoryIdArc == id);
+                    chemInventoryArc.ChemID = formulainput;
+                    /// continue this
+                    /// put it in a try catch like below
+                    /// this would presumably add it to the archive page
+                    
+                    /// maybe call DeleteConfirmed(id) to delete the chemical from the inventory
+                }
                 try
                 {
                     chemInventory.ChemID = formulainput;

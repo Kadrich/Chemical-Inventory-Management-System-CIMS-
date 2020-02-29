@@ -308,6 +308,41 @@ namespace LMS4Carroll.Migrations
                     b.ToTable("ChemInventory");
                 });
 
+            modelBuilder.Entity("LMS4Carroll.Models.ChemInventoryArc", b =>
+            {
+                b.Property<int>("ChemInventoryIdArc")
+                    .ValueGeneratedOnAdd();
+
+                b.Property<int?>("ChemID");
+
+                b.Property<string>("Department")
+                    .HasAnnotation("MaxLength", 50);
+
+                b.Property<DateTime>("ExpiryDate");
+
+                b.Property<int?>("LocationID");
+
+                b.Property<string>("NormalizedLocation")
+                    .HasAnnotation("MaxLength", 50);
+
+                b.Property<int?>("OrderID");
+
+                b.Property<float>("QtyLeft");
+
+                b.Property<string>("Units")
+                    .HasAnnotation("MaxLength", 50);
+
+                b.HasKey("ChemInventoryIdArc");
+
+                b.HasIndex("ChemId");
+
+                b.HasIndex("LocationID");
+
+                b.HasIndex("OrderID");
+
+                b.ToTable("ChemInventoryArc");
+            });
+
             modelBuilder.Entity("LMS4Carroll.Models.ChemLog", b =>
                 {
                     b.Property<int>("ChemLogId")
