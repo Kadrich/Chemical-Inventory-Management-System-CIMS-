@@ -14,46 +14,45 @@ using LMS4Carroll.Services;
 namespace LMS4Carroll.Controllers
 {
     [Authorize(Roles = "Admin,ChemUser,BiologyUser,Student")]
-    public class ChemInventoriesArcController : Controller
+    public class ChemInventoriesArc2Controller : Controller
     {
         private readonly ApplicationDbContext _context;
         private IConfiguration configuration;
 
-        public ChemInventoriesArcController(ApplicationDbContext context, IConfiguration config)
+        public ChemInventoriesArc2Controller(ApplicationDbContext context, IConfiguration config)
         {
             _context = context;
             this.configuration = config;
         }
 
-        // GET: ChemInventories
-        // I'm changing this to GET: ChemInventoriesArc
-        public async Task<IActionResult> Index(string cheminventoryarcString, string sortOrder, bool barcodeFlag)
+        // GET: ChemInventoriesArc2
+        public async Task<IActionResult> Index(string cheminventoryarc2String, string sortOrder, bool barcodeFlag)
         {
-            ViewData["Search"] = cheminventoryarcString;
- //           Sp_Logging("1-Info", "View", "Successfully viewed Chemicals Archive list", "Success");
-            var archive = from m in _context.ChemInventoryArc.Include(c => c.Chemical).Include(c => c.Location).Include(c => c.Order)
+            ViewData["Search"] = cheminventoryarc2String;
+            Sp_Logging("1-Info", "View", "Successfully viewed Chemicals Archive list", "Success");
+            var archive = from m in _context.ChemInventoryArc2.Include(c => c.Chemical).Include(c => c.Location).Include(c => c.Order)
                           select m;
 
             // Search Feature
-            if (!String.IsNullOrEmpty(cheminventoryarcString))
+            if (!String.IsNullOrEmpty(cheminventoryarc2String))
             {
                 int outID;
-                if (Int32.TryParse(cheminventoryarcString, out outID))
+                if (Int32.TryParse(cheminventoryarc2String, out outID))
                 {
-                    archive = archive.Where(s => s.ChemInventoryIdArc.Equals(outID)
+                    archive = archive.Where(s => s.ChemInventoryMIdArc.Equals(outID)
                                         || s.Chemical.ChemID.Equals(outID)
                                         || s.LocationID.Equals(outID));
                 }
                 else
                 {
-                    archive = archive.Where(s => s.Chemical.FormulaName.Contains(cheminventoryarcString));
+                    archive = archive.Where(s => s.Chemical.FormulaName.Contains(cheminventoryarc2String));
 
-                    archive = archive.Where(s => s.Department.Contains(cheminventoryarcString)
-                                        || s.CAT.Contains(cheminventoryarcString)
-                                        || s.LOT.Contains(cheminventoryarcString)
-                                        || s.Units.Contains(cheminventoryarcString)
-                                        || s.Chemical.FormulaName.Contains(cheminventoryarcString)
-                                        || s.Chemical.CAS.Contains(cheminventoryarcString));
+                    archive = archive.Where(s => s.Department.Contains(cheminventoryarc2String)
+                                        || s.CAT.Contains(cheminventoryarc2String)
+                                        || s.LOT.Contains(cheminventoryarc2String)
+                                        || s.Units.Contains(cheminventoryarc2String)
+                                        || s.Chemical.FormulaName.Contains(cheminventoryarc2String)
+                                        || s.Chemical.CAS.Contains(cheminventoryarc2String));
                 }
             }
 
@@ -68,6 +67,7 @@ namespace LMS4Carroll.Controllers
             ViewData["QtySort"] = sortOrder == "QtySort" ? "QtySort_desc" : "QtySort";
             ViewData["UnitSort"] = sortOrder == "UnitSort" ? "UnitSort_desc" : "UnitSort";
             ViewData["DeptSort"] = sortOrder == "DeptSort" ? "DeptSort_desc" : "DeptSort";
+            ViewData["ManuSort"] = sortOrder == "ManuSort" ? "ManuSort_desc" : "ManuSort";
 
             switch (sortOrder)
             {
@@ -102,7 +102,7 @@ namespace LMS4Carroll.Controllers
 
                 //Descending
                 case "BarcodeSort_desc":
-                    archive = archive.OrderByDescending(x => x.ChemInventoryIdArc);
+                    archive = archive.OrderByDescending(x => x.Barcode);
                     break;
                 case "POSort_desc":
                     archive = archive.OrderByDescending(x => x.Order.PO);
@@ -133,7 +133,7 @@ namespace LMS4Carroll.Controllers
                     break;
 
                 default:
-                    archive = archive.OrderBy(x => x.ChemInventoryIdArc);
+                    archive = archive.OrderBy(x => x.Barcode);
                     break;
             }
 
@@ -142,8 +142,8 @@ namespace LMS4Carroll.Controllers
 
         // GET: ChemInventories/Details/5
         // switched to GET: ChemArchives/Details/5
-        // ok I don't know what the '5' does 
-        // double theck the url
+        // ok I don't know what the '5' means 
+        // double check the url
         [Authorize(Roles = "Admin,ChemUser,BiologyUser,Student")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -152,7 +152,7 @@ namespace LMS4Carroll.Controllers
                 return NotFound();
             }
 
-            var chemArchive = await _context.ChemInventoryArc.SingleOrDefaultAsync(m => m.ChemInventoryIdArc == id);
+            var chemArchive = await _context.ChemInventoryArc2.SingleOrDefaultAsync(m => m.ChemInventoryMIdArc == id);
             if (chemArchive == null)
             {
                 return NotFound(chemArchive);
@@ -178,7 +178,7 @@ namespace LMS4Carroll.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ChemUser,BiologyUser")]
-        public async Task<IActionResult> Create(int? formulainput, DateTime dateinput, int? storageinput, int? orderinput, string cat, string lot, float qtyinput, string unitstring, string deptstring)
+        public async Task<IActionResult> Create(int? formulainput, DateTime dateinput, int? storageinput, int? orderinput, string cat, string lot, float qtyinput, string unitstring, string deptstring, string manustring)
         {
             ViewData["Formula"] = formulainput;
             ViewData["ExpiryDate"] = dateinput;
@@ -189,33 +189,41 @@ namespace LMS4Carroll.Controllers
             ViewData["Department"] = deptstring;
             ViewData["CAT"] = cat;
             ViewData["LOT"] = lot;
+            ViewData["Manufacturer"] = manustring;
 
-            ChemInventoryArc chemInventoryArc = null;
+            ChemInventoryArc2 chemInventoryArc2 = null;
 
             if (ModelState.IsValid)
             {
-                chemInventoryArc = new ChemInventoryArc();
-                chemInventoryArc.ChemID = formulainput;
-                chemInventoryArc.LocationID = storageinput;
-                chemInventoryArc.ExpiryDate = dateinput;
-                chemInventoryArc.OrderID = orderinput;
-                chemInventoryArc.QtyLeft = qtyinput;
-                chemInventoryArc.Units = unitstring;
-                chemInventoryArc.Department = deptstring;
-                chemInventoryArc.CAT = cat;
-                chemInventoryArc.LOT = lot;
+                chemInventoryArc2 = new ChemInventoryArc2();
+                chemInventoryArc2.ChemID = formulainput;
+                chemInventoryArc2.LocationID = storageinput;
+                chemInventoryArc2.ExpiryDate = dateinput;
+                chemInventoryArc2.OrderID = orderinput;
+                chemInventoryArc2.QtyLeft = qtyinput;
+                chemInventoryArc2.Units = unitstring;
+                chemInventoryArc2.Department = deptstring;
+                chemInventoryArc2.CAT = cat;
+                chemInventoryArc2.LOT = lot;
+                chemInventoryArc2.Manufacturer = manustring;
                 var temp = _context.Locations.First(m => m.LocationID == storageinput);
-                chemInventoryArc.NormalizedLocation = temp.StorageCode;
+                chemInventoryArc2.NormalizedLocation = temp.StorageCode;
 
-                _context.Add(chemInventoryArc);
+                _context.Add(chemInventoryArc2);
                 await _context.SaveChangesAsync();
- //               Sp_Logging("2-Change", "Create", "User created a chemical archive item where ChemID=" + formulainput + ", OrderID=" + formulainput, "Success");
+
+                // the three lines below are so that the Barcode matches the Primary Key upon creation, which doesn't exist until the item has been added to the _context
+                chemInventoryArc2.Barcode = chemInventoryArc2.ChemInventoryMIdArc;
+                _context.Update(chemInventoryArc2);
+                await _context.SaveChangesAsync();
+
+                Sp_Logging("2-Change", "Create", "User created a chemical archive item where ChemID=" + formulainput + ", OrderID=" + formulainput, "Success");
                 return RedirectToAction("Index", new { barcodeFlag = true });
             }
-            ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName", chemInventoryArc.ChemID);
-            ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventoryArc.LocationID);
-            ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", chemInventoryArc.OrderID);
-            return View(chemInventoryArc);
+            ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName", chemInventoryArc2.ChemID);
+            ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventoryArc2.LocationID);
+            ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", chemInventoryArc2.OrderID);
+            return View(chemInventoryArc2);
         }
 
         // GET: ChemInventories/Edit/5
@@ -228,15 +236,15 @@ namespace LMS4Carroll.Controllers
                 return NotFound();
             }
 
-            var chemInventoryArc = await _context.ChemInventoryArc.SingleOrDefaultAsync(m => m.ChemInventoryIdArc == id);
-            if (chemInventoryArc == null)
+            var chemInventoryArc2 = await _context.ChemInventoryArc2.SingleOrDefaultAsync(m => m.ChemInventoryMIdArc == id);
+            if (chemInventoryArc2 == null)
             {
                 return NotFound();
             }
-            ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName", chemInventoryArc.ChemID);
-            ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventoryArc.LocationID);
-            ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", chemInventoryArc.OrderID);
-            return View(chemInventoryArc);
+            ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName", chemInventoryArc2.ChemID);
+            ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventoryArc2.LocationID);
+            ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", chemInventoryArc2.OrderID);
+            return View(chemInventoryArc2);
         }
 
         // POST: ChemInventories/Edit/5
@@ -244,11 +252,11 @@ namespace LMS4Carroll.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ChemUser,BiologyUser")]
-        public async Task<IActionResult> Edit(int id, int? formulainput, DateTime dateinput, int? storageinput, int? orderinput, string cat, string lot, float qtyinput, string unitstring, string deptstring)
+        public async Task<IActionResult> Edit(int id, int? formulainput, DateTime dateinput, int? storageinput, int? orderinput, string cat, string lot, float qtyinput, string unitstring, string deptstring, string manustring, int barcode)
         {
-            ChemInventoryArc chemInventoryArc = await _context.ChemInventoryArc.SingleOrDefaultAsync(p => p.ChemInventoryIdArc == id);
+            ChemInventoryArc2 chemInventoryArc2 = await _context.ChemInventoryArc2.SingleOrDefaultAsync(p => p.ChemInventoryMIdArc == id);
 
-            if (id != chemInventoryArc.ChemInventoryIdArc)
+            if (id != chemInventoryArc2.ChemInventoryMIdArc)
             {
                 return NotFound();
             }
@@ -257,29 +265,31 @@ namespace LMS4Carroll.Controllers
             {
                 if (qtyinput > 0)
                 {
-                    ChemInventory chemInventory = null;
+                    ChemInventory2 chemInventory2 = null;
                     try
                     {
-                        chemInventory = new ChemInventory();
-                        chemInventory.ChemID = formulainput;
-                        chemInventory.LocationID = storageinput;
-                        chemInventory.ExpiryDate = dateinput;
-                        chemInventory.OrderID = orderinput;
-                        chemInventory.QtyLeft = qtyinput;
-                        chemInventory.Units = unitstring;
-                        chemInventory.Department = deptstring;
-                        chemInventory.CAT = cat;
-                        chemInventory.LOT = lot;
+                        chemInventory2 = new ChemInventory2();
+                        chemInventory2.ChemID = formulainput;
+                        chemInventory2.LocationID = storageinput;
+                        chemInventory2.ExpiryDate = dateinput;
+                        chemInventory2.OrderID = orderinput;
+                        chemInventory2.QtyLeft = qtyinput;
+                        chemInventory2.Units = unitstring;
+                        chemInventory2.Department = deptstring;
+                        chemInventory2.CAT = cat;
+                        chemInventory2.LOT = lot;
+                        chemInventory2.Manufacturer = manustring;
+                        chemInventory2.Barcode = chemInventoryArc2.Barcode;
                         var temp = _context.Locations.First(m => m.LocationID == storageinput);
-                        chemInventory.NormalizedLocation = temp.StorageCode;
-                        _context.Add(chemInventory);
+                        chemInventory2.NormalizedLocation = temp.StorageCode;
+                        _context.Add(chemInventory2);
                         await _context.SaveChangesAsync();
 
                         await DeleteConfirmed(id);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!ChemInventoryArcExists(chemInventory.ChemInventoryId))
+                        if (!ChemInventoryArc2Exists(chemInventory2.ChemInventoryMId))
                         {
                             return NotFound();
                         }
@@ -293,24 +303,26 @@ namespace LMS4Carroll.Controllers
                 {
                     try
                     {
-                        chemInventoryArc.ChemID = formulainput;
-                        chemInventoryArc.LocationID = storageinput;
-                        chemInventoryArc.ExpiryDate = dateinput;
-                        chemInventoryArc.OrderID = orderinput;
-                        chemInventoryArc.QtyLeft = qtyinput;
-                        chemInventoryArc.Units = unitstring;
-                        chemInventoryArc.Department = deptstring;
-                        chemInventoryArc.CAT = cat;
-                        chemInventoryArc.LOT = lot;
+                        chemInventoryArc2.ChemID = formulainput;
+                        chemInventoryArc2.LocationID = storageinput;
+                        chemInventoryArc2.ExpiryDate = dateinput;
+                        chemInventoryArc2.OrderID = orderinput;
+                        chemInventoryArc2.QtyLeft = qtyinput;
+                        chemInventoryArc2.Units = unitstring;
+                        chemInventoryArc2.Department = deptstring;
+                        chemInventoryArc2.CAT = cat;
+                        chemInventoryArc2.LOT = lot;
+                        chemInventoryArc2.Manufacturer = manustring;
+                        chemInventoryArc2.Barcode = barcode;
                         var temp = _context.Locations.First(m => m.LocationID == storageinput);
-                        chemInventoryArc.NormalizedLocation = temp.StorageCode;
-                        _context.Update(chemInventoryArc);
+                        chemInventoryArc2.NormalizedLocation = temp.StorageCode;
+                        _context.Update(chemInventoryArc2);
                         await _context.SaveChangesAsync();
-                        //Sp_Logging("2-Change", "Edit", "User editted a Chemical archive item where ID=" + id.ToString(), "Success");
+                        Sp_Logging("2-Change", "Edit", "User editted a Chemical archive item where ID=" + id.ToString(), "Success");
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!ChemInventoryArcExists(chemInventoryArc.ChemInventoryIdArc))
+                        if (!ChemInventoryArc2Exists(chemInventoryArc2.ChemInventoryMIdArc))
                         {
                             return NotFound();
                         }
@@ -322,10 +334,10 @@ namespace LMS4Carroll.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName", chemInventoryArc.ChemID);
-            ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventoryArc.LocationID);
-            ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", chemInventoryArc.OrderID);
-            return View(chemInventoryArc);
+            ViewData["ChemID"] = new SelectList(_context.Chemical, "ChemID", "FormulaName", chemInventoryArc2.ChemID);
+            ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventoryArc2.LocationID);
+            ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", chemInventoryArc2.OrderID);
+            return View(chemInventoryArc2);
         }
 
         // GET: ChemInventories/Delete/5
@@ -338,13 +350,13 @@ namespace LMS4Carroll.Controllers
                 return NotFound();
             }
 
-            var chemInventoryArc = await _context.ChemInventoryArc.SingleOrDefaultAsync(m => m.ChemInventoryIdArc == id);
-            if (chemInventoryArc == null)
+            var chemInventoryArc2 = await _context.ChemInventoryArc2.SingleOrDefaultAsync(m => m.ChemInventoryMIdArc == id);
+            if (chemInventoryArc2 == null)
             {
                 return NotFound();
             }
 
-            return View(chemInventoryArc);
+            return View(chemInventoryArc2);
         }
 
         // POST: ChemInventories/Delete/5
@@ -354,33 +366,34 @@ namespace LMS4Carroll.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var chemInventoryArc = await _context.ChemInventoryArc.SingleOrDefaultAsync(m => m.ChemInventoryIdArc == id);
-            _context.ChemInventoryArc.Remove(chemInventoryArc);
+            var chemInventoryArc2 = await _context.ChemInventoryArc2.SingleOrDefaultAsync(m => m.ChemInventoryMIdArc == id);
+            _context.ChemInventoryArc2.Remove(chemInventoryArc2);
             await _context.SaveChangesAsync();
- //           Sp_Logging("3-Remove", "Delete", "User deleted a Chemical archive item where ID=" + id.ToString(), "Success");
+            Sp_Logging("3-Remove", "Delete", "User deleted a Chemical archive item where ID=" + id.ToString(), "Success");
             return RedirectToAction("Index");
         }
 
-        private bool ChemInventoryArcExists(int? id)
+        private bool ChemInventoryArc2Exists(int? id)
         {
-            return _context.ChemInventoryArc.Any(e => e.ChemInventoryIdArc == id);
+            return _context.ChemInventoryArc2.Any(e => e.ChemInventoryMIdArc == id);
         }
 
         // ----------------   What Does the Below Do? ---------------------
 
-        // Custom Login Solution
+        //Custom Loggin Solution
         private void Sp_Logging(string level, string logger, string message, string exception)
         {
-            // Connection string from AppSettings.JSON
+            //Connection string from AppSettings.JSON
             string CS = configuration.GetConnectionString("DefaultConnection");
-            // Using Identity middleware to get email address
+            //Using Identity middleware to get email address
             string user = User.Identity.Name;
             string app = "Carroll LMS";
-            // Subtract 5 hours as the timestamp is in GMT timezone
+            //Subtract 5 hours as the timestamp is in GMT timezone
             DateTime logged = DateTime.Now.AddHours(-5);
-            string site = "ChemicalsArchive";
+            //logged.AddHours(-5);
+            string site = "ChemInventoriesArc2";
             string query = "insert into dbo.Log([User], [Application], [Logged], [Level], [Message], [Logger], [CallSite]," +
-                "[Exception]) values(@User, @Application, @Logged, @Level, @Message, @Logger, @Callsite, @Esception)";
+                "[Exception]) values(@User, @Application, @Logged, @Level, @Message,@Logger, @Callsite, @Exception)";
             using (SqlConnection con = new SqlConnection(CS))
             {
                 SqlCommand cmd = new SqlCommand(query, con);

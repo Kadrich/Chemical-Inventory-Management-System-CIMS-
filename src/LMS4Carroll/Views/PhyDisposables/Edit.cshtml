@@ -1,0 +1,82 @@
+﻿@model LMS4Carroll.Models.PhyDisposables
+
+@{
+    ViewData["Title"] = "Edit | Physics Disposables Inventory";
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Edit Inventory</div>
+    <div class="panel-body">
+        <br />
+        <form asp-action="Edit">
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="PhyDisposablesPK" />
+                <div class="form-group">
+                    <label asp-for="DispoID" class="col-md-2 control-label required">Disposable</label>
+                    <div class="col-md-10">
+                        <select asp-for="DispoID" name="NameInput" class="form-control" asp-items="ViewBag.DispoID"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OrderDate" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="OrderDate" name="DateInput" class="form-control" />
+                        <span asp-validation-for="OrderDate" class="text-danger" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LocationID" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <select asp-for="LocationID" name="StorageInput" class="form-control" asp-items="ViewBag.LocationName"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CAT" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="CAT" name="Cat" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cost" class="col-md-2 control-label required"></label>
+                    <div class="col-md-2">
+                        <input asp-for="Cost" name="CostInput" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AmtOrdered" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="AmtOrdered" name="AmtInput" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Supplier" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Supplier" name="SupplierInput" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Comments" class="col-md-2 control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Comments" name="CommentsInput" class="form-control" />
+                    </div>
+                </div>
+                <div id="editbtn" class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                    <div class="col-md-offset-2 col-md-10">
+                        <a asp-action="Index" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

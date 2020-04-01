@@ -146,13 +146,14 @@
                                 <i class="glyphicon glyphicon-trash"></i> Delete
                             </a>
                         }
+@*                      So far, this can't work because of something to do with migrations
                         @if (User.IsInRole("Admin"))
-                        {@* when hyperlink has function, change btn-default -> btn-success and remove the whole style portion   *@
-                            <a id="restorebtn" asp-action="probablycreate" asp-route-id="@item.ChemInventoryIdArc" class="btn btn-default loc3" style="color:gray">
+                        {
+                            <a id="restorebtn" asp-action="probablycreate" asp-route-id="@item.ChemInventoryIdArc" class="btn btn-warning loc3">
                                 <i class="glyphicon glyphicon-arrow-left"></i> Restore
                             </a>
                         }
-                    </td>
+*@                    </td>
                 </tr>
                 }
             </tbody>

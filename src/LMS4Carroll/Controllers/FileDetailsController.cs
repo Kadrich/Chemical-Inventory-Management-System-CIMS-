@@ -44,11 +44,19 @@ namespace LMS4Carroll.Controllers
                 return NotFound();
             }
 
+            
             var fileDetailExpanded = await _context.FileDetails.SingleOrDefaultAsync(m => m.FileDetailID == id);
             if (fileDetailExpanded == null)
             {
                 return NotFound();
             }
+            
+            /*
+            byte[] fileBytes = fileDetailExpanded.File;
+            string fileExt = fileDetailExpanded.FileType;
+
+             src = "~/images/displayImage.jpg 
+             */
 
             return View(fileDetailExpanded);
         }

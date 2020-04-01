@@ -60,5 +60,6 @@ namespace LMS4Carroll.Models
         public virtual ICollection<Animal> Animals { get; set; }
         public virtual ICollection<ChemInventory> ChemInventorys { get; set; }
         public virtual ICollection<ChemInventoryArc> ChemArchives { get; set; }
+        public virtual ICollection<ChemInventoryArc2> ChemArchives2 { get; set; }
     }
 }
