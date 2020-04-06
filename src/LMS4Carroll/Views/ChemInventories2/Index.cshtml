@@ -35,43 +35,44 @@
                 </p>
             </div>
         </form>
-        <table class="table table-bordered table-striped table-condensed">
+        @*  - - - - expirement with column width - - - -  this may include altering the length of some Display(Name = "")s  *@
+        <table class="table table-bordered table-striped table-condensed" style="table-layout:fixed">
             <thead>
                 <tr>
-                    <th>
+                    <th style="width:75px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Barcode), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["BarcodeSort"] })
                     </th>
-                    <th>
+                    <th style="width:70px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Order.PO), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["POSort"] })
                     </th>
-                    <th>
+                    <th style="width:105px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.CAS), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["CASSort"] })
                     </th>
-                    <th>
+                    <th style="width:165px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.FormulaName), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["ChemSort"] })
                     </th>
-                    <th>
+                    <th style="width:100px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Location.StorageCode), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["LocationSort"] })
                     </th>
-                    <th>
+                    <th style="width:75px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
                     </th>
-                    <th>
+                    <th style="width:110px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.ExpiryDate), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["DateSort"] })
                     </th>
-                    <th>
+                    <th style="width:50px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.QtyLeft), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["QtySort"] })
                     </th>
-                    <th>
+                    <th style="width:60px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Units), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["UnitSort"] })
                     </th>
-                    <th>
+                    <th style="width:110px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Department), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["DeptSort"] })
                     </th>
-                    <th>
+                    <th style="width:100px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Manufacturer), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["ManuSort"] })
                     </th>
-                    <th>
+                    <th style="width:100px">
                         Actions
                     </th>
                 </tr>

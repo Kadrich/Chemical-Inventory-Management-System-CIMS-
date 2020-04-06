@@ -31,7 +31,7 @@ namespace LMS4Carroll.Models
 
         [Required]
         [StringLength(50, MinimumLength = 3)]
-        [Display(Name = "Storage Code")]
+        [Display(Name = "Location")]
         public string StorageCode { get; set; }
 
         [Required]

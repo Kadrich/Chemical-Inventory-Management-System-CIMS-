@@ -306,7 +306,7 @@ namespace LMS4Carroll.Controllers
             _context.PhyDisposables.Remove(phyDisposables);
             await _context.SaveChangesAsync();
             Sp_Logging("3-Remove", "Delete", "User deleted a Disposable inventory item where ID=" + id.ToString(), "Success");
-            return RedirectToAction("Delete");
+            return RedirectToAction("Index");
         }
 
         private bool PhyDisposablesExists(int? id)

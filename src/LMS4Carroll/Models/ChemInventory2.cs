@@ -21,7 +21,7 @@ namespace LMS4Carroll.Models
         public int? Barcode { get; set; }
 
         [StringLength(50)]
-        [Display(Name = "Manufacturer")]
+        [Display(Name = "Manuf.")]
         public string Manufacturer { get; set; }
 
         [Required]

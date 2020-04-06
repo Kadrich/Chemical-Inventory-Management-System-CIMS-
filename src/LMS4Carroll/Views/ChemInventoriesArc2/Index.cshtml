@@ -29,42 +29,42 @@
         <table class="table table-bordered table-striped table-condensed">
             <thead>
                 <tr>
-                    <th>
+                    <th style="width:75px">
                         @* "cheminventoryString" -> is in all of these too
                             All switched to "cheminventoryarc2String" *@
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Barcode), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["BarcodeSort"] })
                     </th>
-                    <th>
+                    <th style="width:70px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Order.PO), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["POSort"] })
                     </th>
-                    <th>
+                    <th style="width:105px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.CAS), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["CASSort"] })
                     </th>
-                    <th>
+                    <th style="width:165px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.FormulaName), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["ChemSort"] })
                     </th>
-                    <th>
+                    <th style="width:100px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
                     </th>
-                    <th>
+                    <th style="width:75px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Location.StorageCode), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["LocationSort"] })
                     </th>
-                    <th>
+                    <th style="width:110px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.ExpiryDate), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["DateSort"] })
                     </th>
-                    <th>
+                    <th style="width:50px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.QtyLeft), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["QtySort"] })
                     </th>
-                    <th>
+                    <th style="width:60px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Units), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["UnitSort"] })
                     </th>
-                    <th>
+                    <th style="width:110px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Department), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["DeptSort"] })
                     </th>
-                    <th>
+                    <th style="width:100px">
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Manufacturer), "Index", new { cheminventoryarc2String = ViewData["Search"], sortOrder = ViewData["ManuSort"] })
                     </th>
-                    <th width="200">
+                    <th style="width:100px">
                         Actions
                     </th>
                 </tr>

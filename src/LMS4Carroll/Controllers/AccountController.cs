@@ -148,10 +148,11 @@ namespace LMS4Carroll.Controllers
                                 new SelectListItem { Text = "Freshman", Value = "Freshman"},
                                 new SelectListItem { Text = "N/A", Value = "N/A"},
                             }, "Value", "Text", model.Carrollyear);
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.Firstname, LastName = model.Lastname, CarrollYear = model.Carrollyear, RoleName = "Student" };
             if (ModelState.IsValid)
             {
                 //Using identity middleware and ViewModel to post values from model
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.Firstname, LastName = model.Lastname, CarrollYear = model.Carrollyear, RoleName = "Student" };
+                //var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.Firstname, LastName = model.Lastname, CarrollYear = model.Carrollyear, RoleName = "Student" };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

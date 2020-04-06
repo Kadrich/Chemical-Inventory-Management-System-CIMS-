@@ -35,7 +35,6 @@
             </div>
             <div class="navbar-collapse collapse" id="topNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="dropdown">
@@ -59,7 +58,7 @@
                             <ul class="dropdown-menu">
                                 <li><a asp-area="" asp-controller="Chemicals" asp-action="Index">Chemicals</a></li>
                                 @*<li><a asp-area="" asp-controller="ChemInventories" asp-action="Index">Chemical Inventory</a></li>*@
-                                <li><a asp-area="" asp-controller="ChemInventories2" asp-action="Index">Chemical Inventory 2</a></li>
+                                <li><a asp-area="" asp-controller="ChemInventories2" asp-action="Index">Chemical Inventory</a></li>
                                 <li><a asp-area="" asp-controller="Formula" asp-action="Index">Chemical Formulas</a></li>
                                 @if (User.IsInRole("Admin") || User.IsInRole("ChemUser") || User.IsInRole("Student"))
                                 {
@@ -146,7 +145,7 @@
                                 @if (User.IsInRole("Admin"))
                                 {
                                     @*<li><a asp-area="" asp-controller="ChemInventoriesArc" asp-action="Index">Chemicals Inventory</a></li>*@
-                                    <li><a asp-area="" asp-controller="ChemInventoriesArc2" asp-action="Index">Chemicals Inventory 2</a></li>
+                                    <li><a asp-area="" asp-controller="ChemInventoriesArc2" asp-action="Index">Chemical Archive</a></li>
                                     <li><a asp-area="" asp-controller="ChemArchives" asp-action="Index">Chemistry Equipment</a></li>
                                     <li><a asp-area="" asp-controller="PhyArchives" asp-action="Index">Physics Equipment</a></li>
                                     <li><a asp-area="" asp-controller="BioArchives" asp-action="Index">Biology Equipment</a></li>

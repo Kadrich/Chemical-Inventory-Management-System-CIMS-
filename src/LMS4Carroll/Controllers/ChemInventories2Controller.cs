@@ -149,7 +149,7 @@ namespace LMS4Carroll.Controllers
         }
 
         // print out the chemInventory as a pdf
-        public FileContentResult ExportCSV()
+        public FileContentResult ExportCSV(string searchString)
         {
             var dataTable = from m in _context.ChemInventory2.Include(c => c.Chemical).Include(c => c.Location).Include(c => c.Order)
                             select m;
@@ -166,6 +166,7 @@ namespace LMS4Carroll.Controllers
             export["Department"] = "Department";
             export["Location"] = "Location";
             export["Manufacturer"] = "Manufacturer";
+            export["test"] = searchString + " : test";
 
             foreach (var item in dataTable)
             {
@@ -181,7 +182,7 @@ namespace LMS4Carroll.Controllers
                 export["Location"] = item.NormalizedLocation;
                 export["Manufacturer"] = item.Manufacturer;
             }
-            return File(export.ExportToBytes(), "text/csv", "Chemical Inventory.csv");
+            return File(export.ExportToBytes(), "text/csv", searchString + " Chemical Inventory.csv");
         }
 
         // GET: ChemInventories2/Details/5

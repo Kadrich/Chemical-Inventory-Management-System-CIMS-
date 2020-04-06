@@ -20,11 +20,12 @@
                     <dd>
                         @ViewData["FormulaName"]
                     </dd>
+                    <br />
                     <dt>
                         Formula Description
                     </dt>
                     <dd>
-                        @ViewData["FormulaDescription"]
+                        @Html.Raw(ViewData["FormulaDescription"])
                     </dd>
                 </dl>
             

@@ -50,7 +50,7 @@ namespace LMS4Carroll.Services
                 await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.Auto).ConfigureAwait(false);
                 // disable OAuth2 authentication unless you are actually using an access_token
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate("testlms4carroll", "Carroll2016");
+                client.Authenticate("lms4carroll", "Carroll2016");
                 //client.Authenticate("testlms4carroll", credential.Token.AccessToken);
                 await client.SendAsync(emailMessage).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);

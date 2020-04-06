@@ -5,6 +5,29 @@
     ViewData["Title"] = "Delete | Roles";
 }
 
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Are you sure you want to delete this role?</div>
+    <div class="panel-body">
+        <br />
+        <div>
+            <hr />
+            <h4>@Model</h4>
+            <hr />
+            <form asp-action="DeleteApplicationRole" id="deletebtn">
+                <div class="form-actions no-color">
+                    <a asp-action="Index" class="btn btn-default">
+                        <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+                    </a>
+                    <input type="submit" value="DeleteUser" class="btn btn-danger" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*
 <form asp-action="DeleteApplicationRole" role="form">
     @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Delete Application Role" })
 
@@ -14,3 +37,4 @@
     @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Delete" })
 </form>
 
+*@

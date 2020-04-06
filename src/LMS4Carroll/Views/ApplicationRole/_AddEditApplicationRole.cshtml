@@ -5,6 +5,45 @@
     ViewData["Title"] = "Edit | Roles";
 }
 
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Edit Role</div>
+    <div class="panel-body">
+        <br />
+        <form asp-action="AddEditApplicationRole">
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="RoleName" class="col-md-2 form-control-label required"></label>
+                    <div class="col-md-10">
+                        <input asp-for="RoleName" class="form-control" />
+                        <span asp-validation-for="RoleName" class="text-danger" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="col-md-2 form-control-label required"></label>
+                    <div class="col-md-10">
+                        <textarea type="string" asp-for="Description" class="form-control"> @Model.Description</textarea>
+                        <span type="string" asp-validation-for="Description" class="text-danger" />
+                    </div>
+                </div>
+                <div id="editbtn" class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                    <div class="col-md-offset-2 col-md-10">
+                        <a asp-action="Index" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@*
 <form asp-action="AddEditApplicationRole" role="form">
     @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = $"{(String.IsNullOrEmpty(Model.Id) ? "Add" : "Edit")} Application Role" })
     <div class="modal-body form-horizontal">
@@ -28,3 +67,5 @@
     </div>
     @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
 </form>
+
+*@
