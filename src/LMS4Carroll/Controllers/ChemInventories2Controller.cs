@@ -21,6 +21,8 @@ namespace LMS4Carroll.Controllers
         private readonly ApplicationDbContext _context;
         private IConfiguration configuration;
 
+        public string exportSearch = "";
+
         public ChemInventories2Controller(ApplicationDbContext context, IConfiguration config)
         {
             _context = context;
@@ -44,7 +46,7 @@ namespace LMS4Carroll.Controllers
             // Search Feature
             if (!String.IsNullOrEmpty(cheminventory2String))
             {
-
+                exportSearch = cheminventory2String;
                 int outID;
                 if (Int32.TryParse(cheminventory2String, out outID))
                 {
@@ -149,7 +151,7 @@ namespace LMS4Carroll.Controllers
         }
 
         // print out the chemInventory as a pdf
-        public FileContentResult ExportCSV(string searchString)
+        public FileContentResult ExportCSV()
         {
             var dataTable = from m in _context.ChemInventory2.Include(c => c.Chemical).Include(c => c.Location).Include(c => c.Order)
                             select m;
@@ -166,7 +168,6 @@ namespace LMS4Carroll.Controllers
             export["Department"] = "Department";
             export["Location"] = "Location";
             export["Manufacturer"] = "Manufacturer";
-            export["test"] = searchString + " : test";
 
             foreach (var item in dataTable)
             {
@@ -182,7 +183,7 @@ namespace LMS4Carroll.Controllers
                 export["Location"] = item.NormalizedLocation;
                 export["Manufacturer"] = item.Manufacturer;
             }
-            return File(export.ExportToBytes(), "text/csv", searchString + " Chemical Inventory.csv");
+            return File(export.ExportToBytes(), "text/csv", "Chemical Inventory.csv");
         }
 
         // GET: ChemInventories2/Details/5

@@ -79,6 +79,11 @@ namespace LMS4Carroll.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(model.Email);
+                // the line below changes the name displayed in "Hello <User>!" to the user's first name. This does not affect the database
+                //      simply because I could not figure out how to change the UserName without also changing the NormalizedUserName
+                //      Somewhere, the NormalizedUserName is required to be email address in ALLCAPS as some sort of verification on login.
+                //      If it's not, the user sees "Invalid login attempt" on their screen. This should be changed to use the NormalizedEmail.
+                user.UserName = user.FirstName;
                 if (user != null)
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
@@ -154,6 +159,7 @@ namespace LMS4Carroll.Controllers
                 //Using identity middleware and ViewModel to post values from model
                 //var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.Firstname, LastName = model.Lastname, CarrollYear = model.Carrollyear, RoleName = "Student" };
                 var result = await _userManager.CreateAsync(user, model.Password);
+                
                 if (result.Succeeded)
                 {
                     // Send an email with this link
@@ -171,8 +177,10 @@ namespace LMS4Carroll.Controllers
                     // await _signInManager.SignInAsync(user, isPersistent: false);
                     await _userManager.AddToRoleAsync(user, "Student");
                     //_logger.LogInformation(3, "User created a new account with password.");
+                    
                     return View("CheckEmail");
                 }
+                
                 AddErrors(result);
             }
            

@@ -67,7 +67,7 @@ namespace LMS4Carroll.Models
         public DateTime ExpiryDate { get; set; }
 
         [StringLength(50)]
-        [Display(Name = "Manufacturer")]
+        [Display(Name = "Manuf.")]
         public string Manufacturer { get; set; }
 
         public virtual ICollection<ChemLog> ChemLogs { get; set; }

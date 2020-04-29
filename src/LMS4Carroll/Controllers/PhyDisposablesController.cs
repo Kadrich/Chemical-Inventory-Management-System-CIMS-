@@ -164,16 +164,16 @@ namespace LMS4Carroll.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,PhysicsUser")]
-        public async Task<IActionResult> Create(int? nameinput, DateTime dateinput, int? storageinput, string catinput, int? costinput, int? amtinput, string supplierinput, string commentinput)
+        public async Task<IActionResult> Create(int? nameinput, DateTime dateinput, int? storageinput, string cat, int? costinput, int? amtinput, string supplierinput, string commentsinput)
         {
             ViewData["ItemName"] = nameinput;
             ViewData["OrderDate"] = dateinput;
             ViewData["StorageCode"] = storageinput;
-            ViewData["CAT"] = catinput;
+            ViewData["CAT"] = cat;
             ViewData["Cost"] = costinput;
             ViewData["AmtOrdered"] = amtinput;
             ViewData["Supplier"] = supplierinput;
-            ViewData["Comments"] = commentinput;
+            ViewData["Comments"] = commentsinput;
 
             PhyDisposables phyDisposables = null;
 
@@ -183,11 +183,11 @@ namespace LMS4Carroll.Controllers
                 phyDisposables.DispoID = nameinput;
                 phyDisposables.OrderDate = dateinput;
                 phyDisposables.LocationID = storageinput;
-                phyDisposables.CAT = catinput;
+                phyDisposables.CAT = cat;
                 phyDisposables.Cost = costinput;
                 phyDisposables.AmtOrdered = amtinput;
                 phyDisposables.Supplier = supplierinput;
-                phyDisposables.Comments = commentinput;
+                phyDisposables.Comments = commentsinput;
                 var temp = _context.Locations.First(m => m.LocationID == storageinput);
                 phyDisposables.NormalizedLocation = temp.StorageCode;
                 var temp2 = _context.Disposable.First(n => n.DispoID == nameinput);

@@ -56,7 +56,7 @@
                             @Html.DisplayFor(modelItem => item.DispoName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Comments)
+                            @Html.Raw(item.Comments)
                         </td>
                         @if (User.IsInRole("Admin") || User.IsInRole("PhysicsUser"))
                         {

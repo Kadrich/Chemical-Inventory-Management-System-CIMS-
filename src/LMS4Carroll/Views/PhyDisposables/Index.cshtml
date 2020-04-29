@@ -100,7 +100,7 @@
                         @Html.DisplayFor(modelItem => item.Supplier)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Comments)
+                        @Html.Raw(item.Comments)
                     </td>
                     <td>
                         @if  (User.IsInRole("Admin") || User.IsInRole("PhysicsUser"))

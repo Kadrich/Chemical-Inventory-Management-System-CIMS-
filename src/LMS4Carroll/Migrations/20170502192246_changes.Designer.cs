@@ -139,7 +139,7 @@ namespace LMS4Carroll.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasName("EmailIndex");
 
                     b.ToTable("AspNetUsers");
                 });

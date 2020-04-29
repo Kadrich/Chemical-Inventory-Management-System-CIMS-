@@ -46,10 +46,10 @@
                         </li>
                     }
                     @*  dashboard is for future implmentation, buisiness intelligence layer
-        @if (User.IsInRole("Admin")|| User.IsInRole("BiologyUser") || User.IsInRole("ChemUser") || User.IsInRole("AnimalUser"))
-        {
-            <li><a asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
-        }
+                    @if (User.IsInRole("Admin")|| User.IsInRole("BiologyUser") || User.IsInRole("ChemUser") || User.IsInRole("AnimalUser"))
+                    {
+                        <li><a asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    }
                     *@
                     @if (User.IsInRole("Admin") || User.IsInRole("Student") || User.IsInRole("ChemUser") || User.IsInRole("BiologyUser"))
                     {
@@ -145,7 +145,7 @@
                                 @if (User.IsInRole("Admin"))
                                 {
                                     @*<li><a asp-area="" asp-controller="ChemInventoriesArc" asp-action="Index">Chemicals Inventory</a></li>*@
-                                    <li><a asp-area="" asp-controller="ChemInventoriesArc2" asp-action="Index">Chemical Archive</a></li>
+                                    <li><a asp-area="" asp-controller="ChemInventoriesArc2" asp-action="Index">Chemicals</a></li>
                                     <li><a asp-area="" asp-controller="ChemArchives" asp-action="Index">Chemistry Equipment</a></li>
                                     <li><a asp-area="" asp-controller="PhyArchives" asp-action="Index">Physics Equipment</a></li>
                                     <li><a asp-area="" asp-controller="BioArchives" asp-action="Index">Biology Equipment</a></li>
