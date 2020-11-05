@@ -142,7 +142,7 @@ namespace LMS4Carroll.Controllers
 
             var export = new CsvExport();
             export.AddRow();
-            export["BioEqID"] = "Biological Equipment ID";
+            export["BioEqID"] = "Biology Equipment ID";
             export["ManfctName"] = "Manufacturer Name";
             export["EquipModel"] = "Equipment Model";
             export["EquipType"] = "Equipment Type";
@@ -165,7 +165,7 @@ namespace LMS4Carroll.Controllers
                 export["NxtInspectDate"] = item.InspectionDate;
                 export["OrderID"] = item.Order.OrderID;
             }
-            return File(export.ExportToBytes(), "text/csv", "Biological Equipment Inventory.csv");
+            return File(export.ExportToBytes(), "text/csv", "Biology Equipment Inventory.csv");
         }
 
 
@@ -207,7 +207,7 @@ namespace LMS4Carroll.Controllers
             {
                 _context.Add(bioEquipment);
                 await _context.SaveChangesAsync();
-                sp_Logging("2-Change", "Create", "User created a biological equipment","Success");
+                sp_Logging("2-Change", "Create", "User created a Biology equipment","Success");
                 return RedirectToAction("Index");
             }
             ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "NormalizedStr", bioEquipment.LocationID);
@@ -251,7 +251,7 @@ namespace LMS4Carroll.Controllers
                 try
                 {
                     _context.Update(bioEquipment);
-                    sp_Logging("2-Change", "Edit", "User edited a Biological Equipment where ID= " + id.ToString(), "Success");
+                    sp_Logging("2-Change", "Edit", "User edited a Biology Equipment where ID= " + id.ToString(), "Success");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -298,7 +298,7 @@ namespace LMS4Carroll.Controllers
         {
             var bioEquipment = await _context.BioEquipments.SingleOrDefaultAsync(m => m.BioEquipmentID == id);
             _context.BioEquipments.Remove(bioEquipment);
-            sp_Logging("3-Remove", "Delete", "User deleted a Biological Equipment where ID=" + id.ToString(), "Success");
+            sp_Logging("3-Remove", "Delete", "User deleted a Biology Equipment where ID=" + id.ToString(), "Success");
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
