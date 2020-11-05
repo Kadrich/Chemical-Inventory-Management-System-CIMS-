@@ -1,3 +1,6 @@
+
+//                      ChemInventories2 is the current version. This page is not in use anymore
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -209,7 +212,7 @@ namespace LMS4Carroll.Controllers
         public IActionResult Create()
         {
             ViewData["ChemID"] = new SelectList(_context.Chemical.OrderBy(x => x.FormulaName), "ChemID", "FormulaName");
-            ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode");
+            ViewData["LocationName"] = new SelectList(_context.Locations.OrderBy(x => x.StorageCode), "LocationID", "StorageCode");
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID");
             return View();
         }
@@ -300,32 +303,90 @@ namespace LMS4Carroll.Controllers
             
             if (ModelState.IsValid)
             {
-                try
+                // if the amount of the chemical is changed to zero units, 
+                //   this places it in the archives table, and deletes it from
+                //   the inventory table.
+                //   possibly also sends you to the archives table. not sure yet.
+                if (qtyinput == 0)
                 {
-                    chemInventory.ChemID = formulainput;
-                    chemInventory.LocationID = storageinput;
-                    chemInventory.ExpiryDate = dateinput;
-                    chemInventory.OrderID = orderinput;
-                    chemInventory.QtyLeft = qtyinput;
-                    chemInventory.Units = unitstring;
-                    chemInventory.Department = deptstring;
-                    chemInventory.CAT = cat;
-                    chemInventory.LOT = lot;
-                    var temp = _context.Locations.First(m => m.LocationID == storageinput);
-                    chemInventory.NormalizedLocation = temp.StorageCode;
-                    _context.Update(chemInventory);
-                    await _context.SaveChangesAsync();
-                    Sp_Logging("2-Change", "Edit", "User edited a Chemical inventory item where ID= " + id.ToString(), "Success");
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ChemInventoryExists(chemInventory.ChemInventoryId))
+                    ChemInventoryArc chemInventoryArc = null;
+
+                    try
                     {
-                        return NotFound();
+                        chemInventoryArc = new ChemInventoryArc();
+                        chemInventoryArc.ChemID = formulainput;
+                        chemInventoryArc.LocationID = storageinput;
+                        chemInventoryArc.ExpiryDate = dateinput;
+                        chemInventoryArc.OrderID = orderinput;
+                        chemInventoryArc.QtyLeft = qtyinput;
+                        chemInventoryArc.Units = unitstring;
+                        chemInventoryArc.Department = deptstring;
+                        chemInventoryArc.CAT = cat;
+                        chemInventoryArc.LOT = lot;
+                        var temp = _context.Locations.First(m => m.LocationID == storageinput);
+                        chemInventoryArc.NormalizedLocation = temp.StorageCode;
+                        _context.Add(chemInventoryArc);
+                        await _context.SaveChangesAsync();
+
+                        // This section would change the barcode/PK of the item, inside the archive table,
+                        // to match what it was in the inventory table if that was possible.
+                        // The only option I see is to replace the table with one where the barcode is an
+                        // additional column, or attribute, in the table, and change it using the line
+                        // directly below this comment, but placed up above with the other attributes.
+                        // ** there may be a method of altering a table's attributes **
+                        // Doing this change would requre code changes throughout the files affiliated with chemicals
+ /*                       chemInventoryArc.ChemInventoryIdArc = chemInventory.ChemInventoryId;
+                        temp = _context.Locations.First(m => m.LocationID == storageinput);
+                        chemInventoryArc.NormalizedLocation = temp.StorageCode;
+                        _context.Update(chemInventoryArc);
+                        await _context.SaveChangesAsync();
+*/
+                        //Sp_Logging("4-Archive", "Edit", "User archived a Chemical inventory item where ID= " + id.ToString(), "Success");
+
+                        await DeleteConfirmed(id);
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!ChemInventoryExists(chemInventoryArc.ChemInventoryIdArc))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+                    /// maybe call DeleteConfirmed(id) to delete the chemical from the inventory
+                }
+                else {
+                    try
+                    {
+                        chemInventory.ChemID = formulainput;
+                        chemInventory.LocationID = storageinput;
+                        chemInventory.ExpiryDate = dateinput;
+                        chemInventory.OrderID = orderinput;
+                        chemInventory.QtyLeft = qtyinput;
+                        chemInventory.Units = unitstring;
+                        chemInventory.Department = deptstring;
+                        chemInventory.CAT = cat;
+                        chemInventory.LOT = lot;
+                        var temp = _context.Locations.First(m => m.LocationID == storageinput);
+                        chemInventory.NormalizedLocation = temp.StorageCode;
+                        _context.Update(chemInventory);
+                        await _context.SaveChangesAsync();
+                        Sp_Logging("2-Change", "Edit", "User edited a Chemical inventory item where ID= " + id.ToString(), "Success");
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!ChemInventoryExists(chemInventory.ChemInventoryId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
                 return RedirectToAction("Index");
@@ -334,6 +395,53 @@ namespace LMS4Carroll.Controllers
             ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "StorageCode", chemInventory.LocationID);
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", chemInventory.OrderID);
             return View(chemInventory);
+        }
+
+        // GET: ChemInventories/Archive/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Archive(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var chemInventory = await _context.ChemInventory.SingleOrDefaultAsync(m => m.ChemInventoryId == id);
+            if (chemInventory == null)
+            {
+                return NotFound();
+            }
+
+            return View(chemInventory);
+        }
+
+        // POST: ChemInventories/Archive/5
+        [HttpPost, ActionName("Archive")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ArchiveConfirmed(int id)
+        {
+            var chemInventory = await _context.ChemInventory.SingleOrDefaultAsync(m => m.ChemInventoryId == id);
+            ChemInventoryArc chemInventoryArc = new ChemInventoryArc();
+
+            if (chemInventoryArc != null)
+            {
+                chemInventoryArc.ChemInventoryIdArc = chemInventory.ChemInventoryId;
+                chemInventoryArc.ChemID = chemInventory.ChemID;
+                chemInventoryArc.LocationID = chemInventory.LocationID;
+                chemInventoryArc.ExpiryDate = chemInventory.ExpiryDate;
+                chemInventoryArc.OrderID = chemInventory.OrderID;
+                chemInventoryArc.QtyLeft = chemInventory.QtyLeft;
+                chemInventoryArc.Units = chemInventory.Units;
+                chemInventoryArc.Department = chemInventory.Department;
+                chemInventoryArc.CAT = chemInventory.CAT;
+                chemInventoryArc.LOT = chemInventory.LOT;
+                _context.ChemInventoryArc.Add(chemInventoryArc);
+                await _context.SaveChangesAsync();
+            }
+            _context.ChemInventory.Remove(chemInventory);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         // GET: ChemInventories/Delete/5

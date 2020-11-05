@@ -1,0 +1,69 @@
+﻿@model LMS4Carroll.Models.ChemInventory
+
+@{ 
+    ViewData["Title"] = "Archive | Chemical Inventory";
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Inventory Archiving</div>
+    <div class="panel-body">
+        <br />
+        <div>
+            <h4>Chemicals Inventory</h4>
+            <hr />
+            <d1 class="d1-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.ChemInventoryId)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ChemInventoryId)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ChemID)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ChemID)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.NormalizedLocation)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.NormalizedLocation)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Department)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Department)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ExpiryDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ExpiryDate)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.QtyLeft)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.QtyLeft)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Units)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Units)
+                </dd>
+            </d1>
+            <form asp-action="Archive" id="archivebtn">
+                <div class="form-actions no-color">
+                    <a asp-action="Index" class="btn btn-default">
+                        <i class="glyphicon glyphicon-arrow-left"></i> Back to List
+                    </a>
+                    <input type="submit" value="Archive" class="btn btn-warning" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

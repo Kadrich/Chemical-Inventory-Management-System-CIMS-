@@ -63,12 +63,12 @@
                         @if (User.IsInRole("Admin") || User.IsInRole("Handler"))
                         {
                             <td>
-                                <a id="downloadbtn" asp-action="Download" asp-route-id="@item.FileDetailID" class="btn btn-info">
+                                <a id="downloadbtn" asp-action="Download" asp-route-id="@item.FileDetailID" class="btn btn-info loc3">
                                     <i class="glyphicon glyphicon-circle-arrow-down"></i>  Download
                                 </a>
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <a id="deletebtn" asp-action="Delete" asp-route-id="@item.FileDetailID" class="btn btn-danger">
+                                    <a id="deletebtn" asp-action="Delete" asp-route-id="@item.FileDetailID" class="btn btn-danger loc3">
                                         <i class="glyphicon glyphicon-trash"></i>  Delete
                                     </a>
                                 }

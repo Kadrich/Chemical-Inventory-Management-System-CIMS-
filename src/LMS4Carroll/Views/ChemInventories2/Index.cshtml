@@ -1,0 +1,158 @@
+﻿@model IEnumerable<LMS4Carroll.Models.ChemInventory2>
+
+@{ 
+    ViewData["Title"] = "List | Chemical Inventory";
+}
+@section scripts {
+
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-heading">Chemical Inventory</div>
+    <div class="panel-body table-responsive">
+        @if (ViewData["NewBarcode"] != null)
+        {
+            <div>
+                <i class="glyphicon glyphicon-plus"></i>  The new inventory has a barcode of @ViewData["NewBarcode"]
+            </div>
+        }
+        <div class="btn-group">
+            @if (User.IsInRole("Admin") || User.IsInRole("ChemUser") || User.IsInRole("BiologyUser"))
+            {
+                <a id="createRoleModal" asp-action="Create" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-plus"></i>  Add Inventory
+                </a>
+            }
+        </div><br />
+        <form asp-controller="ChemInventories2" asp-action="Index" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    <input type="text" placeholder="Chem Name" name="cheminventory2String" value="@ViewData["Search"]" id="SearchString" />
+                    <input type="submit" value="Search" class="btn btn-default" />
+                    <a class="btn btn-default" asp-action="Index">Back to Full List</a>
+                    <a class="btn btn-default" asp-action="ExportCSV">Export Table</a>
+                </p>
+            </div>
+        </form>
+        @*  - - - - expirement with column width - - - -  this may include altering the length of some Display(Name = "")s  *@
+        <table class="table table-bordered table-striped table-condensed" style="table-layout:fixed">
+            <thead>
+                <tr>
+                    <th style="width:75px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Barcode), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["BarcodeSort"] })
+                    </th>
+                    <th style="width:70px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Order.PO), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["POSort"] })
+                    </th>
+                    <th style="width:105px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.CAS), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["CASSort"] })
+                    </th>
+                    <th style="width:165px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.FormulaName), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["ChemSort"] })
+                    </th>
+                    <th style="width:100px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Location.StorageCode), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["LocationSort"] })
+                    </th>
+                    <th style="width:75px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
+                    </th>
+                    <th style="width:110px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.ExpiryDate), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["DateSort"] })
+                    </th>
+                    <th style="width:50px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.QtyLeft), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["QtySort"] })
+                    </th>
+                    <th style="width:60px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Units), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["UnitSort"] })
+                    </th>
+                    <th style="width:110px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Department), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["DeptSort"] })
+                    </th>
+                    <th style="width:100px">
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Manufacturer), "Index", new { cheminventory2String = ViewData["Search"], sortOrder = ViewData["ManuSort"] })
+                    </th>
+                    <th style="width:100px">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Barcode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Order.PO)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Chemical.CAS)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Chemical.FormulaName)
+                        </td>
+                        <td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-area="" asp-controller="Locations" asp-action="Details" asp-route-id="@item.LocationID">
+                                    @Html.DisplayFor(modelItem => item.Location.NormalizedStr)
+                                </a>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.Location.NormalizedStr)
+                            }
+                        </td>
+                        <td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-area="" asp-controller="Orders" asp-action="Details" asp-route-id="@item.OrderID">
+                                    @Html.DisplayFor(modelItem => item.OrderID)
+                                </a>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.OrderID)
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExpiryDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QtyLeft)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Units)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Department)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Manufacturer)
+                        </td>
+                        <td>
+                            @if (User.IsInRole("ChemUser") || User.IsInRole("BioUser") || User.IsInRole("Admin"))
+                            {
+                                <a id="editbtn" asp-action="Edit" asp-route-id="@item.ChemInventoryMId" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-pencil"></i>  Edit
+                                </a>
+                            }
+
+                            <a id="detailsbtn" asp-action="Details" asp-route-id="@item.ChemInventoryMId" class="btn btn-info loc2">
+                                <i class="glyphicon glyphicon-search"></i>  Details
+                            </a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a id="deletebtn" asp-action="Delete" asp-route-id="@item.ChemInventoryMId" class="btn btn-danger loc3">
+                                    <i class="glyphicon glyphicon-trash"></i>  Delete
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

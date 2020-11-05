@@ -494,7 +494,7 @@ namespace LMS4Carroll.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
+                name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);

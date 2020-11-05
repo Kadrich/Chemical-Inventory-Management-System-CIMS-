@@ -44,6 +44,7 @@ namespace LMS4Carroll.Controllers
                 return NotFound();
             }
 
+            
             var fileDetailExpanded = await _context.FileDetails.SingleOrDefaultAsync(m => m.FileDetailID == id);
             if (fileDetailExpanded == null)
             {
@@ -51,6 +52,47 @@ namespace LMS4Carroll.Controllers
             }
 
             return View(fileDetailExpanded);
+        }
+
+        // display the image of the invoice on the webpage
+        public async Task<IActionResult> InvoiceImage(int id)
+        {
+            var fileDetails = await _context.FileDetails.SingleOrDefaultAsync(m => m.FileDetailID == id);
+            var fileInfo = fileDetails.File;
+            var fileExt = fileDetails.FileType;
+
+            string mime = GetMIME(fileExt);
+
+            return File(fileInfo, mime);
+        }
+
+        // find the correct MIME type
+        private string GetMIME(string ext)
+        {
+            string mime = "";
+            switch (ext)
+            {
+                case "jpg":
+                    mime = "image/jpeg";
+                    break;
+                case "jpeg":
+                    mime = "image/jpeg";
+                    break;
+                case "pdf":
+                    mime = "application/pdf";
+                    break;
+                case "png":
+                    mime = "image/png";
+                    break;
+                case "gif":
+                    mime = "image/gif";
+                    break;
+                default:
+                    mime = "unknown file type. Contact Developer.";
+                    break;
+
+            }
+            return mime;
         }
 
         [Authorize(Roles = "Admin")]

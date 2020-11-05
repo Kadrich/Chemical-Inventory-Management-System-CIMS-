@@ -28,6 +28,9 @@ namespace LMS4Carroll.Data
 		public DbSet<CageLog> CageLog { get; set; }
 		public DbSet<Chemical> Chemical { get; set; }
 		public DbSet<ChemInventory> ChemInventory { get; set; }
+		public DbSet<ChemInventory2> ChemInventory2 { get; set; }
+		public DbSet<ChemInventoryArc> ChemInventoryArc { get; set; }
+		public DbSet<ChemInventoryArc2> ChemInventoryArc2 { get; set; }
 		public DbSet<Formula> Formula { get; set; }
 		public DbSet<FormulaLog> FormulaLog { get; set; }
 		public DbSet<ChemArchive> ChemArchives { get; set; }
@@ -35,6 +38,8 @@ namespace LMS4Carroll.Data
 		public DbSet<ChemLog> ChemLog { get; set; }
 		public DbSet<PhyEquipment> PhyEquipments { get; set; }
 		public DbSet<PhyArchive> PhyArchives { get; set; }
+		public DbSet<Disposable> Disposable { get; set; }
+		public DbSet<PhyDisposables> PhyDisposables { get; set; }
 		
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

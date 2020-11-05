@@ -1,0 +1,80 @@
+﻿@model IEnumerable<LMS4Carroll.Models.Disposable>
+
+@{ 
+    ViewData["Title"] = "List | Disposable";
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary">
+    <div class="panel-heading panel-heading">Disposables</div>
+    <div class="panel-body table-responsive">
+        <div class="btn-group">
+            @if (User.IsInRole("Admin") || User.IsInRole("PhysicsUser"))
+            {
+                <a id="createRoleModal" asp-action="Create" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-plus"></i> Add Disposable
+                </a>
+            }
+        </div><br />
+        <form asp-controller="Disposable" asp-action="Index">
+            <div class="form-actions no-color">
+                <p>
+                    <input type="text" name="dispostring" value="@ViewData["CurrentFilter"]" id="SearchString" />
+                    <input type="submit" value="Search" class="btn btn-default" />
+                    <a asp-action="Index" class="btn btn-default">Back to Full List</a>
+                </p>
+            </div>
+        </form>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.DispoID), "Index", new { dispostring = ViewData["CurrentFilter"], sortOrder = ViewData["DispoIDSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.DispoName), "Index", new { namestring = ViewData["CurrentFilter"], sortOrder = ViewData["NameSort"] })
+                    </th>
+                    <th>
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Comments), "Index", new { commentsString = ViewData["CurrentFilter"], sortOrder = ViewData["CommentSort"] })
+                    </th>
+                    @if (User.IsInRole("Admin") || User.IsInRole("PhysicsUser"))
+                    {
+                        <th>
+                            Actions
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DispoID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DispoName)
+                        </td>
+                        <td>
+                            @Html.Raw(item.Comments)
+                        </td>
+                        @if (User.IsInRole("Admin") || User.IsInRole("PhysicsUser"))
+                        {
+                            <td>
+                                <a id="editbtn" asp-action="Edit" asp-route-id="@item.DispoID" class="btn btn-info loc3">
+                                    <i class="glyphicon glyphicon-pencil"></i> Edit
+                                </a>
+                                <a id="deletebtn" asp-action="Delete" asp-route-id="@item.DispoID" class="btn btn-danger loc3">
+                                    <i class="glyphicon glyphicon-trash"></i> Delete
+                                </a>
+                                <a id="detailsbtn" asp-action="Details" asp-route-id="@item.DispoID" class="btn btn-info loc3">
+                                    <i class="glyphicon glyphicon-search"></i> Details
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
