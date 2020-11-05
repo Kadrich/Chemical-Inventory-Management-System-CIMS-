@@ -209,17 +209,11 @@ namespace LMS4Carroll.Controllers
 
         // GET: Chemicals/Delete/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id, bool itemInUse)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
-            }
-
-            if (itemInUse)
-            {
-                var temp = _context.Chemical.First(n => n.ChemID == id);
-                ViewData["ItemInUse"] = temp.FormulaName.ToString() + " ID: " + temp.ChemID.ToString();
             }
 
             var chemical = await _context.Chemical.SingleOrDefaultAsync(m => m.ChemID == id);
@@ -239,14 +233,7 @@ namespace LMS4Carroll.Controllers
         {
             var chemical = await _context.Chemical.SingleOrDefaultAsync(m => m.ChemID == id);
             _context.Chemical.Remove(chemical);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                return RedirectToAction("Delete", new { itemInUse = true });
-            }
+            await _context.SaveChangesAsync();
             sp_Logging("3-Remove", "Delete", "User deleted a Chemical where ID=" + id.ToString(), "Success");
             return RedirectToAction("Index");
         }

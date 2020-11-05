@@ -195,13 +195,13 @@
                     @if (User.IsInRole("Admin"))
                 {
                     <td>
-                        <a id="editbtn" asp-action="Edit" asp-route-id="@item.OrderID" class="btn btn-info loc2">
+                        <a id="editbtn" asp-action="Edit" asp-route-id="@item.OrderID" class="btn btn-info">
                             <i class="glyphicon glyphicon-pencil"></i>  Edit
                         </a>
-                        <a id="deletebtn" asp-action="Delete" asp-route-id="@item.OrderID" class="btn btn-danger loc2">
+                        <a id="deletebtn" asp-action="Delete" asp-route-id="@item.OrderID" class="btn btn-danger">
                             <i class="glyphicon glyphicon-trash"></i>  Delete
                         </a>
-                        <a id="detailsbtn" asp-action="Details" asp-route-id="@item.OrderID" class="btn btn-info loc2">
+                        <a id="detailsbtn" asp-action="Details" asp-route-id="@item.OrderID" class="btn btn-info loc3">
                             <i class="glyphicon glyphicon-search"></i>  Details
                         </a>
                     </td>

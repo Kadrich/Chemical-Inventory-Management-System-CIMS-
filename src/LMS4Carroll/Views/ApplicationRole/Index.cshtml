@@ -34,12 +34,13 @@
                         <td>@item.Description</td>
                         <td>@item.NumberOfUsers</td>
                         <td>
-                            <a id="addEditApplicationRoleModal" asp-action="AddEditApplicationRole" asp-route-id="@item.Id" class="btn btn-info">
+                            <a id="addEditApplicationRoleModal" data-toggle="modal" asp-action="AddEditApplicationRole" asp-route-id="@item.Id" data-target="#modal-action-application-role"
+                               class="btn btn-info">
                                 <i class="glyphicon glyphicon-pencil"></i>  Edit
                             </a>
                             @if (item.NumberOfUsers == 0)
                             {
-                                <a id="deleteApplicationRoleModal" asp-action="DeleteApplicationRole" asp-route-id="@item.Id" class="btn btn-danger loc2">
+                                <a id="deleteApplicationRoleModal" data-toggle="modal" asp-action="DeleteApplicationRole" asp-route-id="@item.Id" data-target="#modal-action-application-role" class="btn btn-danger loc2">
                                     <i class="glyphicon glyphicon-trash"></i>  Delete
                                 </a>
                             }

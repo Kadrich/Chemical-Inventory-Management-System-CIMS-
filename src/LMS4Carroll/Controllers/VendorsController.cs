@@ -50,7 +50,7 @@ namespace LMS4Carroll.Controllers
                 }
             }
 
-            return View(await vendors.OrderBy(s => s.Name).ToListAsync());
+            return View(await vendors.OrderByDescending(s => s.VendorID).ToListAsync());
             //return View(await _context.Vendors.ToListAsync());
         }
 

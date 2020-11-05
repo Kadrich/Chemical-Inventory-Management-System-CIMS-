@@ -31,7 +31,7 @@ namespace LMS4Carroll.Models
 
         [Required]
         [StringLength(50, MinimumLength = 3)]
-        [Display(Name = "Location")]
+        [Display(Name = "Storage Code")]
         public string StorageCode { get; set; }
 
         [Required]
@@ -45,11 +45,8 @@ namespace LMS4Carroll.Models
         public virtual ICollection<ChemEquipment> ChemEquipments { get; set; }
         public virtual ICollection<BioEquipment> BioEquipments { get; set; }
         public virtual ICollection<ChemInventory> ChemInventories { get; set; }
-        public virtual ICollection<ChemInventory2> ChemInventories2 { get; set; }
-        public virtual ICollection<ChemInventoryArc> ChemArchives { get; set; }
-        public virtual ICollection<ChemInventoryArc2> ChemArchives2 { get; set; }
         public virtual ICollection<Animal> Animals { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
-        public virtual ICollection<PhyDisposables> PhyDisposables { get; set; }
+
     }
 }

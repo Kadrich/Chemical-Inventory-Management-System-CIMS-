@@ -52,7 +52,7 @@ namespace LMS4Carroll.Controllers
                     model.Description = applicationRole.Description;
                 }
             }
-            return View("_AddEditApplicationRole", model);
+            return PartialView("_AddEditApplicationRole", model);
         }
         [HttpPost]
         public async Task<IActionResult> AddEditApplicationRole(string id, ApplicationRoleViewModel model)
@@ -76,6 +76,7 @@ namespace LMS4Carroll.Controllers
                     return RedirectToAction("Index");
                 }
             }
+            //return PartialView(model);
             return RedirectToAction("Index");
             //the async won't be effective for model-based error handling.
             //consider following the format Chemicals use to edit details in a new window
@@ -93,7 +94,7 @@ namespace LMS4Carroll.Controllers
                     name = applicationRole.Name;
                 }
             }
-            return View("_DeleteApplicationRole", name);
+            return PartialView("_DeleteApplicationRole", name);
         }
 
         [HttpPost]

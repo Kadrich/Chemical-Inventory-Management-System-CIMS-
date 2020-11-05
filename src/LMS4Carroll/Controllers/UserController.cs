@@ -11,7 +11,6 @@ using LMS4Carroll.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
 
 namespace LMS4Carroll.Controllers
 {
@@ -31,7 +30,6 @@ namespace LMS4Carroll.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             try
@@ -55,7 +53,6 @@ namespace LMS4Carroll.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditUser(string id)
         {
             EditUserViewModel model = new EditUserViewModel();
@@ -73,11 +70,10 @@ namespace LMS4Carroll.Controllers
                     model.FirstName = user.FirstName;
                     model.LastName = user.LastName;
                     model.Email = user.Email;
-                    // if the line below is throwing an InvalidOperationException: Sequence contains no elements, The user was not given a role. This must be done in the database
                     model.ApplicationRoleId = roleManager.Roles.Single(r => r.Name == userManager.GetRolesAsync(user).Result.Single()).Id;
                 }
             }
-            return View(model);
+            return PartialView("EditUser", model);
         }
 
         [HttpPost]
@@ -136,7 +132,7 @@ namespace LMS4Carroll.Controllers
                     name = applicationUser.FirstName + " " + applicationUser.LastName;
                 }
             }
-            return View("DeleteUser", name);
+            return PartialView("DeleteUser", name);
         }
 
         [HttpPost]

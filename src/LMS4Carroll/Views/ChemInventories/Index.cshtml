@@ -150,10 +150,10 @@
                         @Html.ActionLink(Html.DisplayNameFor(model => model.Chemical.FormulaName), "Index", new { cheminventoryString = ViewData["Search"], sortOrder = ViewData["ChemSort"] })
                     </th>
                     <th>
-                        @Html.ActionLink(Html.DisplayNameFor(model => model.Location.StorageCode), "Index", new { cheminventoryString = ViewData["Search"], sortOrder = ViewData["LocationSort"] })
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { cheminventoryString = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
                     </th>
                     <th>
-                        @Html.ActionLink(Html.DisplayNameFor(model => model.OrderID), "Index", new { cheminventoryString = ViewData["Search"], sortOrder = ViewData["OrderSort"] })
+                        @Html.ActionLink(Html.DisplayNameFor(model => model.Location.StorageCode), "Index", new { cheminventoryString = ViewData["Search"], sortOrder = ViewData["LocationSort"] })
                     </th>
                     @*<th>
                             CAT#
@@ -262,14 +262,7 @@
                                     <i class="glyphicon glyphicon-trash"></i>  Delete
                                 </a>
                             }
- @*                         So far, this can't work because of something to do with migrations
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a id="archivebtn" asp-action="Archive" asp-route-id="@item.ChemInventoryId" class="btn btn-warning loc3">
-                                    Archive
-                                </a>
-                            }
- *@                       </td>
+                        </td>
                         
                     </tr>
                 }

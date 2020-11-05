@@ -42,26 +42,6 @@
                     @Html.DisplayFor(model => model.OrderID)
                 </dd>
             </dl>
-            <p>
-                @if (!Model.FileType.Equals("pdf"))
-                {
-                <dd>
-                    Click image for a better view
-                </dd>
-                }
-            </p>
-            <p>
-                <a href="/FileDetails/InvoiceImage/@Model.FileDetailID">
-                    @if (!Model.FileType.Equals("pdf"))
-                    {
-                        <img src="/FileDetails/InvoiceImage/@Model.FileDetailID" width="400" height="550" />
-                    }
-                    else
-                    {
-                        <iframe src="/FileDetails/InvoiceImage/@Model.FileDetailID" width="1000" height="550" />
-                    }
-                </a>
-            </p>
         </div>
         <div id="deletebtn">
             <div class="form-actions no-color">

@@ -40,10 +40,11 @@
                         <td>@item.LastName</td>
                         <td>@item.Email</td>
                         <td>
-                            <a id="editUserModal" asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-info">
+                            <a id="editUserModal" data-toggle="modal" asp-action="EditUser" asp-route-id="@item.Id" data-target="#modal-action-user"
+                               class="btn btn-info">
                                 <i class="glyphicon glyphicon-pencil"></i>  Edit
                             </a>
-                            <a id="deleteUserModal" asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-danger">
+                            <a id="deleteUserModal" data-toggle="modal" asp-action="DeleteUser" asp-route-id="@item.Id" data-target="#modal-action-user" class="btn btn-danger">
                                 <i class="glyphicon glyphicon-trash"></i>  Delete
                             </a>
                         </td>
