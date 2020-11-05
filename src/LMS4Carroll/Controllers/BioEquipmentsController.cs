@@ -10,6 +10,7 @@ using LMS4Carroll.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using LMS4Carroll.Services;
 
 namespace LMS4Carroll.Controllers
 {
@@ -132,6 +133,42 @@ namespace LMS4Carroll.Controllers
 
         }
 
+
+        // print out the BioEquipment as a pdf
+        public FileContentResult ExportCSV()
+        {
+            var dataTable = from m in _context.BioEquipments.Include(c => c.Location).Include(c => c.Order)
+                            select m;
+
+            var export = new CsvExport();
+            export.AddRow();
+            export["BioEqID"] = "Biology Equipment ID";
+            export["ManfctName"] = "Manufacturer Name";
+            export["EquipModel"] = "Equipment Model";
+            export["EquipType"] = "Equipment Type";
+            export["S/N"] = "Serial Number";
+            export["Location"] = "Location";
+            export["InstallDate"] = "Installed Date";
+            export["NxtInspectDate"] = "Next Inspection Date";
+            export["OrderID"] = "Order ID";
+
+            foreach (var item in dataTable)
+            {
+                export.AddRow();
+                export["BioEqID"] = item.BioEquipmentID;
+                export["ManfctName"] = item.EquipmentName;
+                export["EquipModel"] = item.EquipmentModel;
+                export["EquipType"] = item.Type;
+                export["S/N"] = item.SerialNumber;
+                export["Location"] = item.Location.NormalizedStr;
+                export["InstallDate"] = item.InstalledDate;
+                export["NxtInspectDate"] = item.InspectionDate;
+                export["OrderID"] = item.Order.OrderID;
+            }
+            return File(export.ExportToBytes(), "text/csv", "Biology Equipment Inventory.csv");
+        }
+
+
         // GET: BioEquipments/Details/5
         [Authorize(Roles = "Admin,BiologyUser")]
         public async Task<IActionResult> Details(int? id)
@@ -170,7 +207,7 @@ namespace LMS4Carroll.Controllers
             {
                 _context.Add(bioEquipment);
                 await _context.SaveChangesAsync();
-                sp_Logging("2-Change", "Create", "User created a biological equipment","Success");
+                sp_Logging("2-Change", "Create", "User created a Biology equipment","Success");
                 return RedirectToAction("Index");
             }
             ViewData["LocationName"] = new SelectList(_context.Locations, "LocationID", "NormalizedStr", bioEquipment.LocationID);
@@ -214,7 +251,7 @@ namespace LMS4Carroll.Controllers
                 try
                 {
                     _context.Update(bioEquipment);
-                    sp_Logging("2-Change", "Edit", "User edited a Biological Equipment where ID= " + id.ToString(), "Success");
+                    sp_Logging("2-Change", "Edit", "User edited a Biology Equipment where ID= " + id.ToString(), "Success");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -261,7 +298,7 @@ namespace LMS4Carroll.Controllers
         {
             var bioEquipment = await _context.BioEquipments.SingleOrDefaultAsync(m => m.BioEquipmentID == id);
             _context.BioEquipments.Remove(bioEquipment);
-            sp_Logging("3-Remove", "Delete", "User deleted a Biological Equipment where ID=" + id.ToString(), "Success");
+            sp_Logging("3-Remove", "Delete", "User deleted a Biology Equipment where ID=" + id.ToString(), "Success");
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
