@@ -142,7 +142,7 @@ namespace LMS4Carroll.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("EmailIndex");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -463,21 +463,6 @@ namespace LMS4Carroll.Migrations
                     b.ToTable("Chemical");
                 });
 
-            modelBuilder.Entity("LMS4Carroll.Models.Disposable", b =>
-                {
-                    b.Property<int?>("DispoID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("DispoName")
-                        .HasAnnotation("MasLength", 50);
-
-                    b.Property<string>("Comments");
-
-                    b.HasKey("DispoID");
-
-                    b.ToTable("Disposable");
-                });
-
             modelBuilder.Entity("LMS4Carroll.Models.ChemInventory", b =>
                 {
                     b.Property<int?>("ChemInventoryId")
@@ -518,52 +503,6 @@ namespace LMS4Carroll.Migrations
 
                     b.ToTable("ChemInventory");
                 });
-
-            modelBuilder.Entity("LMS4Carroll.Models.ChemInventory2", b =>
-            {
-                b.Property<int?>("ChemInventoryMId")
-                    .ValueGeneratedOnAdd();
-
-                b.Property<string>("CAT")
-                    .HasAnnotation("MaxLength", 50);
-
-                b.Property<int?>("ChemID");
-
-                b.Property<string>("Department")
-                    .HasAnnotation("MaxLength", 50);
-
-                b.Property<DateTime>("ExpiryDate");
-
-                b.Property<string>("LOT")
-                    .HasAnnotation("MaxLength", 50);
-
-                b.Property<int?>("LocationID");
-
-                b.Property<string>("NormalizedLocation")
-                    .HasAnnotation("MaxLength", 50);
-
-                b.Property<int?>("OrderID");
-
-                b.Property<float>("QtyLeft");
-
-                b.Property<string>("Units")
-                    .HasAnnotation("MaxLength", 50);
-
-                b.Property<string>("Manufacturer")
-                    .HasAnnotation("MaxLength", 50);
-
-                b.Property<int?>("Barcode");
-
-                b.HasKey("ChemInventoryId");
-
-                b.HasIndex("ChemID");
-
-                b.HasIndex("LocationID");
-
-                b.HasIndex("OrderID");
-
-                b.ToTable("ChemInventory");
-            });
 
             modelBuilder.Entity("LMS4Carroll.Models.ChemLog", b =>
                 {
@@ -877,59 +816,6 @@ namespace LMS4Carroll.Migrations
 
                     b.HasOne("LMS4Carroll.Models.Order", "Order")
                         .WithMany("ChemInventorys")
-                        .HasForeignKey("OrderID");
-                });
-
-            modelBuilder.Entity("LMS4Carroll.Models.ChemInventory2", b =>
-                {
-                    b.HasOne("LMS4Carroll.Models.Chemical", "Chemical")
-                        .WithMany("ChemInventories2")
-                        .HasForeignKey("ChemID");
-
-                    b.HasOne("LMS4Carroll.Models.Location", "Location")
-                        .WithMany("ChemInventories2")
-                        .HasForeignKey("LocationID");
-
-                    b.HasOne("LMS4Carroll.Models.Order", "Order")
-                        .WithMany("ChemInventorys2")
-                        .HasForeignKey("OrderID");
-                });
-
-            modelBuilder.Entity("LMS4Carroll.Models.PhyDisposables", b =>
-                {
-                    b.HasOne("LMS4Carroll.Location", "Location")
-                        .WithMany("PhyDisposables")
-                        .HasForeignKey("LocationID");
-                });
-
-            // Has something to do with Chemicals Archive. Double check arguments
-            modelBuilder.Entity("LMS4Carroll.Models.ChemInventoryArc", b =>
-                {
-                    b.HasOne("LMS4Carroll.Models.Chemical", "Chemical")
-                        .WithMany("ChemInventoriesArc")
-                        .HasForeignKey("ChemID");
-
-                    b.HasOne("LMS4Carroll.Models.Location", "Location")
-                        .WithMany("ChemInventoriesArc")
-                        .HasForeignKey("LocationID");
-
-                    b.HasOne("LMS4Carroll.Models.Order", "Order")
-                        .WithMany("ChemInventorysArc")
-                        .HasForeignKey("OrderID");
-                });
-
-            modelBuilder.Entity("LMS4Carroll.Models.ChemInventoryArc2", b =>
-                {
-                    b.HasOne("LMS4Carroll.Models.Chemical", "Chemical")
-                        .WithMany("ChemInventoriesArc2")
-                        .HasForeignKey("ChemID");
-
-                    b.HasOne("LMS4Carroll.Models.Location", "Location")
-                        .WithMany("ChemInventoriesArc2")
-                        .HasForeignKey("LocationID");
-
-                    b.HasOne("LMS4Carroll.Models.Order", "Order")
-                        .WithMany("ChemInventorysArc2")
                         .HasForeignKey("OrderID");
                 });
 

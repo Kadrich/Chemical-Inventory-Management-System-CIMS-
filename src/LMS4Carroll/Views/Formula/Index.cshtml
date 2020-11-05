@@ -55,12 +55,12 @@
                         </a>
                         
 
-                        <a id="detailsbtn" asp-action="Details" asp-route-id="@item.FormulaID" class="btn btn-info">
+                        <a id="detailsbtn" asp-action="Details" asp-route-id="@item.FormulaID" class="btn btn-info loc2">
                             <i class="glyphicon glyphicon-search"></i>  Details
                         </a>
                         @if (User.IsInRole("Admin"))
                         {
-                        <a id="deletebtn" asp-action="Delete" asp-route-id="@item.FormulaID" class="btn btn-danger">
+                        <a id="deletebtn" asp-action="Delete" asp-route-id="@item.FormulaID" class="btn btn-danger loc3">
                             <i class="glyphicon glyphicon-trash"></i>  Delete
                         </a>
                         }

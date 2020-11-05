@@ -5,60 +5,6 @@
     ViewData["Title"] = "Edit | User";
 }
 
-
-<div class="top-buffer"></div>
-<div class="panel panel-primary">
-    <div class="panel-heading panel-heading">Edit User</div>
-    <div class="panel-body">
-        <br />
-        <form asp-action="EditUser">
-            <div class="form-horizontal">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group">
-                    <label asp-for="FirstName" class="col-md-2 form-control-label required"></label>
-                    <div class="col-md-10">
-                        <input asp-for="FirstName" class="form-control" />
-                        <span asp-validation-for="FirstName" class="text-danger" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="LastName" class="col-md-2 form-control-label required"></label>
-                    <div class="col-md-10">
-                        <input asp-for="LastName" class="form-control" />
-                        <span asp-validation-for="LastName" class="text-danger" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Email" class="col-md-2 form-control-label required"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ApplicationRoleId" class="col-md-2 form-control-label required"></label>
-                    <div class="col-md-10">
-                        <select asp-for="ApplicationRoleId" asp-items="@Model.ApplicationRoles" class="form-control"></select>
-                    </div>
-                </div>
-                <div id="editbtn" class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-primary" />
-                    </div>
-                    <div class="col-md-offset-2 col-md-10">
-                        <a asp-action="Index" class="btn btn-danger">
-                            <i class="glyphicon glyphicon-arrow-left"></i> Back to List
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-@*  ==========  Bad layout. Don't use. Functionality is solid though. ================= *@
-@*
 <form asp-action="EditUser" role="form">
     @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = "Edit User" })
     <div class="modal-body form-horizontal">
@@ -96,7 +42,7 @@
     </div>
     @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
 </form>
-*@
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

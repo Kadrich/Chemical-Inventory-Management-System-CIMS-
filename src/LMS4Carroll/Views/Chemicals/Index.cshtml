@@ -152,11 +152,11 @@
                         @Html.ActionLink(Html.DisplayNameFor(model => model.State), "Index", new { chemstring = ViewData["CurrentFilter"], sortOrder = ViewData["StateSort"] })
                     </th>
                     @if (User.IsInRole("Admin") || User.IsInRole("ChemUser") || User.IsInRole("BiologyUser"))
-                    {
+                {
                     <th>
                         Actions
                     </th>
-                    }
+            }
                 </tr>
             </thead>
             <tbody>
@@ -197,18 +197,13 @@
                         </a>
                         @if (User.IsInRole("Admin"))
                     {
-                        <a id="deletebtn" asp-action="Delete" asp-route-id="@item.ChemID" class="btn btn-danger loc3">
+                        <a id="deletebtn" asp-action="Delete" asp-route-id="@item.ChemID" class="btn btn-danger">
                             <i class="glyphicon glyphicon-trash"></i>  Delete
                         </a>
                 }
                         <a id="detailsbtn" asp-action="Details" asp-route-id="@item.ChemID" class="btn btn-info loc3">
                             <i class="glyphicon glyphicon-search"></i>  Details
                         </a>
-                        @*
-                        <a id="archivebtn" asp-action="Archive" asp-route-id="@item.ChemID" class="btn btn-info loc3">
-                            <i class="glyphicon glyphicon-arrow-right"></i> Archive
-                        </a>
-                        *@
                     </td>
             }
                 </tr>
