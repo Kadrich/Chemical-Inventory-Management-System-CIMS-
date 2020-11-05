@@ -10,6 +10,7 @@ using LMS4Carroll.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using LMS4Carroll.Services;
 
 namespace LMS4Carroll.Controllers
 {
@@ -131,6 +132,42 @@ namespace LMS4Carroll.Controllers
             return View(await equipments.ToListAsync());
 
         }
+
+
+        // print out the BioEquipment as a pdf
+        public FileContentResult ExportCSV()
+        {
+            var dataTable = from m in _context.BioEquipments.Include(c => c.Location).Include(c => c.Order)
+                            select m;
+
+            var export = new CsvExport();
+            export.AddRow();
+            export["BioEqID"] = "Biological Equipment ID";
+            export["ManfctName"] = "Manufacturer Name";
+            export["EquipModel"] = "Equipment Model";
+            export["EquipType"] = "Equipment Type";
+            export["S/N"] = "Serial Number";
+            export["Location"] = "Location";
+            export["InstallDate"] = "Installed Date";
+            export["NxtInspectDate"] = "Next Inspection Date";
+            export["OrderID"] = "Order ID";
+
+            foreach (var item in dataTable)
+            {
+                export.AddRow();
+                export["BioEqID"] = item.BioEquipmentID;
+                export["ManfctName"] = item.EquipmentName;
+                export["EquipModel"] = item.EquipmentModel;
+                export["EquipType"] = item.Type;
+                export["S/N"] = item.SerialNumber;
+                export["Location"] = item.Location.NormalizedStr;
+                export["InstallDate"] = item.InstalledDate;
+                export["NxtInspectDate"] = item.InspectionDate;
+                export["OrderID"] = item.Order.OrderID;
+            }
+            return File(export.ExportToBytes(), "text/csv", "Biological Equipment Inventory.csv");
+        }
+
 
         // GET: BioEquipments/Details/5
         [Authorize(Roles = "Admin,BiologyUser")]

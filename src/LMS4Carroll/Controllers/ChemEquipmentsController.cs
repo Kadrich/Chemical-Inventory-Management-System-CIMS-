@@ -11,6 +11,7 @@ using ZXing;
 using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using LMS4Carroll.Services;
 
 namespace LMS4Carroll.Controllers
 {
@@ -64,6 +65,51 @@ namespace LMS4Carroll.Controllers
                 return View(await equipments.OrderByDescending(s => s.ChemEquipmentID).ToListAsync());
             }
         }
+
+
+
+        // print out the chemInventory as a pdf
+        public FileContentResult ExportCSV()
+        {
+            var dataTable = from m in _context.ChemicalEquipments.Include(c => c.Location).Include(c => c.Order)
+                            select m;
+
+            var export = new CsvExport();
+            export.AddRow();
+            export["ChemEqID"] = "Chemical Equipment ID";
+            export["ManfctName"] = "Manufacturer Name";
+            export["EquipModel"] = "Equipment Model";
+            export["S/N"] = "Serial Number";
+            export["Location"] = "Location";
+            export["InstallDate"] = "Installed Date";
+            export["InspectDate"] = "Inspection Date";
+            export["OrderID"] = "Order ID";
+            export["CAT"] = "CAT Number";
+            export["LOT"] = "LOT Number";
+
+
+
+            foreach (var item in dataTable)
+            {
+                export.AddRow();
+                export["ChemEqID"] = item.ChemEquipmentID;
+                export["ManfctName"] = item.EquipmentName;
+                export["EquipModel"] = item.EquipmentModel;
+                export["S/N"] = item.SerialNumber;
+                export["Location"] = item.Location.NormalizedStr;
+                export["InstallDate"] = item.InstalledDate;
+                export["InspectDate"] = item.InspectionDate;
+                export["OrderID"] = item.Order.OrderID;
+                export["CAT"] = item.CAT;
+                export["LOT"] = item.LOT;
+
+
+
+            }
+
+            return File(export.ExportToBytes(), "text/csv", "Chemical Equipment Inventory.csv");
+        }
+
 
         // GET: ChemEquipments/Details/5
         [Authorize(Roles = "Admin,ChemUser")]
