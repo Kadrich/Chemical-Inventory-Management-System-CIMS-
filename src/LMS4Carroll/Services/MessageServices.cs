@@ -26,7 +26,7 @@ namespace LMS4Carroll.Services
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Carroll LMS", "testlms4carroll@gmail.com"));
+            emailMessage.From.Add(new MailboxAddress("Carroll LMS", "do-not-reply@chemventory.carrollu.edu"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("plain") { Text = message };
@@ -47,10 +47,10 @@ namespace LMS4Carroll.Services
             {
                 //client.Connect("smtp.gmail.com", 587, SecureSocketOptions.SslOnConnect);
                 //client.Connect("smtp.gmail.com", 587, false);
-                await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.Auto).ConfigureAwait(false);
+                await client.ConnectAsync("imail.carrollu.edu", 25).ConfigureAwait(false);
                 // disable OAuth2 authentication unless you are actually using an access_token
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate("testlms4carroll", "Carroll2016");
+                //client.AuthenticationMechanisms.Remove("XOAUTH2");
+                //client.Authenticate("testlms4carroll", "Carroll2016");
                 //client.Authenticate("testlms4carroll", credential.Token.AccessToken);
                 await client.SendAsync(emailMessage).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);
