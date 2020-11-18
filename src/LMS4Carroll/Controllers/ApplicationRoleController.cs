@@ -34,7 +34,7 @@ namespace LMS4Carroll.Controllers
                 RoleName = r.Name,
                 Id = r.Id,
                 Description = r.Description,
-                NumberOfUsers = r.Users.Count
+                //NumberOfUsers = r.Users.Count
             }).ToList();
             return View(model);
         }
